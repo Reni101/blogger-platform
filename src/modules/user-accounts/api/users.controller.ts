@@ -22,10 +22,7 @@ export class UsersController {
     constructor(
         private usersQueryRepository: UsersQueryRepository,
         private usersService: UsersService,
-    ) {
-        //
-        // private usersService: UsersService,
-    }
+    ) {}
 
     @Get()
     async getAll(
@@ -34,7 +31,7 @@ export class UsersController {
         return this.usersQueryRepository.getAll(query);
     }
     @Post()
-    async createUser(@Body() body: CreateUserInputDto) {
+    async createUser(@Body() body: CreateUserInputDto): Promise<UserViewDto> {
         const userId = await this.usersService.createUser(body);
         return this.usersQueryRepository.getByIdOrNotFoundFail(userId);
     }

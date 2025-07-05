@@ -48,13 +48,13 @@ $ yarn run start:prod
 
 ```bash
 # unit tests
-$ yarn run test
+$ yarn run testing
 
 # e2e tests
-$ yarn run test:e2e
+$ yarn run testing:e2e
 
-# test coverage
-$ yarn run test:cov
+# testing coverage
+$ yarn run testing:cov
 ```
 
 ## Deployment

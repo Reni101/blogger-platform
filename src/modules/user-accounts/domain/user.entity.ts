@@ -5,7 +5,7 @@ import { CreateUserDomainDto } from './dto/create-user.domain.dto';
 //флаг timestemp автоматичеки добавляет поля upatedAt и createdAt
 @Schema({ timestamps: true })
 export class User {
-    @Prop({ type: String, required: true })
+    @Prop({ type: String, required: true, min: 5, max: 10 })
     login: string;
 
     @Prop({ type: String, required: true })
@@ -38,13 +38,6 @@ export class User {
         }
         this.deletedAt = new Date();
     }
-    //
-    // update(dto: UpdateUserDto) {
-    //     if (dto.email !== this.email) {
-    //         this.isEmailConfirmed = false;
-    //         this.email = dto.email;
-    //     }
-    // }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
