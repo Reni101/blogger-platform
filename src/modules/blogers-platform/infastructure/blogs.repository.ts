@@ -13,17 +13,17 @@ export class BlogsRepository {
         });
     }
 
-    async save(user: BlogDocument) {
-        await user.save();
+    async save(blog: BlogDocument) {
+        await blog.save();
     }
 
     async findOrNotFoundFail(id: string): Promise<BlogDocument> {
-        const user = await this.findById(id);
+        const blog = await this.findById(id);
 
-        if (!user) {
-            throw new NotFoundException('user not found');
+        if (!blog) {
+            throw new NotFoundException('blog not found');
         }
 
-        return user;
+        return blog;
     }
 }

@@ -21,4 +21,9 @@ export class BlogsService {
         await this.blogsRepository.save(blog);
         return blog._id.toString();
     }
+    async deleteBlog(id: string) {
+        const blog = await this.blogsRepository.findOrNotFoundFail(id);
+        blog.makeDeleted();
+        await this.blogsRepository.save(blog);
+    }
 }

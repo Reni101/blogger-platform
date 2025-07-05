@@ -29,6 +29,13 @@ export class Blog {
         blog.websiteUrl = dto.websiteUrl;
         return blog as BlogDocument;
     }
+
+    makeDeleted() {
+        if (this.deletedAt !== null) {
+            throw new Error('Entity already deleted');
+        }
+        this.deletedAt = new Date();
+    }
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
