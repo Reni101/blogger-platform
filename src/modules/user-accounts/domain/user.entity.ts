@@ -20,7 +20,7 @@ export class User {
     createdAt: Date;
     updatedAt: Date;
 
-    @Prop({ type: Date, nullable: true })
+    @Prop({ type: Date, nullable: true, default: null })
     deletedAt: Date | null;
 
     static createInstance(dto: CreateUserDomainDto): UserDocument {
