@@ -5,6 +5,7 @@ import { TestingModule } from './modules/testing/testing.module';
 import { BlogPlatformModule } from './modules/blogers-platform/blog-platform.module';
 import * as process from 'node:process';
 import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
 
 @Module({
     imports: [
@@ -16,7 +17,7 @@ import { ConfigModule } from '@nestjs/config';
         BlogPlatformModule,
         TestingModule,
     ],
-    controllers: [],
+    controllers: [AppController],
     providers: [],
 })
 export class AppModule {}
