@@ -3,6 +3,6 @@ import { BaseQueryParams } from '../../../../core/dto/base.query-params.input-dt
 
 export class GetUsersQueryParams extends BaseQueryParams {
     sortBy = UsersSortBy.CreatedAt;
-    searchLoginTerm: string | null = null;
-    searchEmailTerm: string | null = null;
+    searchLoginTerm?: string | null = null;
+    searchEmailTerm?: string | null = null;
 }

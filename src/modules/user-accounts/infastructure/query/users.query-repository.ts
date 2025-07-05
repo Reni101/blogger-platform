@@ -4,11 +4,14 @@ import { GetUsersQueryParams } from '../../api/input-dto/get-users-query-params.
 import { PaginatedViewDto } from '../../../../core/dto/base.paginated.view-dto';
 import { UserViewDto } from '../../api/view-dto/users.view-dto';
 import { FilterQuery } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UsersQueryRepository {
-    constructor(@InjectModel(User.name) private UserModel: UserModelType) {}
+    constructor(
+        @InjectModel(User.name)
+        private UserModel: UserModelType,
+    ) {}
 
     async getAll(
         query: GetUsersQueryParams,
@@ -34,8 +37,8 @@ export class UsersQueryRepository {
         const users = await this.UserModel.find(filter)
             .sort({ [query.sortBy]: query.sortDirection })
             .skip(query.calculateSkip())
-            .limit(query.pageSize);
-
+            .limit(query.pageSize)
+            .lean();
         const totalCount = await this.UserModel.countDocuments(filter);
 
         const items = users.map(UserViewDto.mapToView);
@@ -46,5 +49,18 @@ export class UsersQueryRepository {
             page: query.pageNumber,
             size: query.pageSize,
         });
+    }
+
+    async getByIdOrNotFoundFail(id: string): Promise<UserViewDto> {
+        const user = await this.UserModel.findOne({
+            _id: id,
+            deletedAt: null,
+        });
+
+        if (!user) {
+            throw new NotFoundException('user not found');
+        }
+
+        return UserViewDto.mapToView(user);
     }
 }
