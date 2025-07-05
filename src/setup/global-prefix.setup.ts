@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-
+// api
 export const GLOBAL_PREFIX = '';
 
 export function globalPrefixSetup(app: INestApplication) {
