@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 import { ExtendedLike, ExtendedLikeSchema } from './extended-like.schema';
 import { CreatePostDomainDto } from './dto/create-post.domain.dto';
+import { UpdatePostDto } from '../dto/update-post.dto';
 
 @Schema({ timestamps: true })
 export class Post {
@@ -49,11 +50,13 @@ export class Post {
         }
         this.deletedAt = new Date();
     }
-    // updatePost(dto: UpdateBlogDto) {
-    //     this.websiteUrl = dto.websiteUrl;
-    //     this.name = dto.name;
-    //     this.description = dto.description;
-    // }
+    updatePost(dto: UpdatePostDto & { blogName: string }) {
+        this.title = dto.title;
+        this.shortDescription = dto.shortDescription;
+        this.content = dto.content;
+        this.blogName = dto.blogName;
+        this.blogId = dto.blogId;
+    }
 }
 export const PostSchema = SchemaFactory.createForClass(Post);
 

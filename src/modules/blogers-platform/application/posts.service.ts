@@ -4,6 +4,7 @@ import { Post, PostModelType } from '../domain/post.enity';
 import { PostsRepository } from '../infastructure/posts.repository';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { BlogsRepository } from '../infastructure/blogs.repository';
+import { UpdatePostDto } from '../dto/update-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -27,14 +28,15 @@ export class PostsService {
         await this.postsRepository.save(post);
         return post._id.toString();
     }
-    // async deleteBlog(id: string) {
-    //     const blog = await this.blogsRepository.findOrNotFoundFail(id);
-    //     blog.makeDeleted();
-    //     await this.blogsRepository.save(blog);
-    // }
-    // async updateBlog(dto: UpdateBlogDto) {
-    //     const blog = await this.blogsRepository.findOrNotFoundFail(dto.id);
-    //     blog.updateBlog(dto);
-    //     await this.blogsRepository.save(blog);
-    // }
+    async deletePost(id: string) {
+        const post = await this.postsRepository.findOrNotFoundFail(id);
+        post.makeDeleted();
+        await this.postsRepository.save(post);
+    }
+    async updatePost(dto: UpdatePostDto) {
+        const blog = await this.blogsRepository.findOrNotFoundFail(dto.blogId);
+        const post = await this.postsRepository.findOrNotFoundFail(dto.id);
+        post.updatePost({ ...dto, blogName: blog.name });
+        await this.postsRepository.save(post);
+    }
 }
