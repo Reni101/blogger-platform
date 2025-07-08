@@ -55,7 +55,7 @@ export class PostsController {
     ): Promise<void> {
         return this.postsService.updatePost({ ...body, id: id });
     }
-
+    @Get()
     async getAll(
         @Query() query: GetPostsQueryParams,
     ): Promise<PaginatedViewDto<PostViewDto[]>> {
