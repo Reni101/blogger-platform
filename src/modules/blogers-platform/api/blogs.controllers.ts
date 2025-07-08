@@ -8,6 +8,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
 } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
 import { BlogViewDto } from './view-dto/blogs.view-dto';
@@ -17,6 +18,8 @@ import {
     UpdateBlogInputDto,
 } from './input-dto/blogs.input-dto';
 import { BlogsService } from '../application/blogs.service';
+import { PaginatedViewDto } from '../../../core/dto/base.paginated.view-dto';
+import { GetBlogsQueryParams } from './input-dto/get-blogs-query-params.input-dto';
 
 @Controller('blogs')
 export class BlogsControllers {
@@ -51,5 +54,12 @@ export class BlogsControllers {
         @Body() body: UpdateBlogInputDto,
     ): Promise<void> {
         return this.blogsService.updateBlog({ ...body, id: id });
+    }
+
+    @Get()
+    async getAll(
+        @Query() query: GetBlogsQueryParams,
+    ): Promise<PaginatedViewDto<BlogViewDto[]>> {
+        return this.blogsQueryRepository.getAll(query);
     }
 }
