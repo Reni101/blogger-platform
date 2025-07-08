@@ -84,6 +84,7 @@ export class BlogsControllers {
         @Query() query: GetPostsQueryParams,
         @Param('blogId') blogId: string,
     ) {
+        await this.blogsQueryRepository.getByIdOrNotFoundFail(blogId);
         return await this.postsQueryRepository.getPostsByBlogId(query, blogId);
     }
 }
