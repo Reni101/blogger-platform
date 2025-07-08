@@ -11,3 +11,8 @@ export class UpdateBlogInputDto {
     description: string;
     websiteUrl: string;
 }
+export class CreatePostByBlogIdInputDto {
+    title: string;
+    shortDescription: string;
+    content: string;
+}

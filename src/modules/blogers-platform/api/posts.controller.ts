@@ -30,8 +30,8 @@ export class PostsController {
 
     @Post()
     async createPost(@Body() body: CreatePostInputDto): Promise<PostViewDto> {
-        const blogId = await this.postsService.createPost(body);
-        return this.postsQueryRepository.getByIdOrNotFoundFail(blogId);
+        const postId = await this.postsService.createPost(body);
+        return this.postsQueryRepository.getByIdOrNotFoundFail(postId);
     }
 
     @ApiParam({ name: 'id' })
