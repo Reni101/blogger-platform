@@ -8,10 +8,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UsersQueryRepository {
-    constructor(
-        @InjectModel(User.name)
-        private UserModel: UserModelType,
-    ) {}
+    constructor(@InjectModel(User.name) private UserModel: UserModelType) {}
 
     async getAll(
         query: GetUsersQueryParams,

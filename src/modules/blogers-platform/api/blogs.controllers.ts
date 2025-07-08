@@ -7,11 +7,15 @@ import {
     HttpStatus,
     Param,
     Post,
+    Put,
 } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
 import { BlogViewDto } from './view-dto/blogs.view-dto';
 import { BlogsQueryRepository } from '../infastructure/query/blogs.query-repository';
-import { CreateBlogInputDto } from './input-dto/blogs.input-dto';
+import {
+    CreateBlogInputDto,
+    UpdateBlogInputDto,
+} from './input-dto/blogs.input-dto';
 import { BlogsService } from '../application/blogs.service';
 
 @Controller('blogs')
@@ -36,7 +40,16 @@ export class BlogsControllers {
     @ApiParam({ name: 'id' })
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteBlogr(@Param('id') id: string): Promise<void> {
+    async deleteBlog(@Param('id') id: string): Promise<void> {
         return this.blogsService.deleteBlog(id);
+    }
+
+    @Put(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async updateBlog(
+        @Param('id') id: string,
+        @Body() body: UpdateBlogInputDto,
+    ): Promise<void> {
+        return this.blogsService.updateBlog({ ...body, id: id });
     }
 }

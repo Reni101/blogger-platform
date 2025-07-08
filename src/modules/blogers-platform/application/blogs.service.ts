@@ -3,6 +3,7 @@ import { CreateBlogDto } from '../dto/create-blog.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogModelType } from '../domain/blog.entity';
 import { BlogsRepository } from '../infastructure/blogs.repository';
+import { UpdateBlogDto } from '../dto/update-blog.dto';
 
 @Injectable()
 export class BlogsService {
@@ -24,6 +25,11 @@ export class BlogsService {
     async deleteBlog(id: string) {
         const blog = await this.blogsRepository.findOrNotFoundFail(id);
         blog.makeDeleted();
+        await this.blogsRepository.save(blog);
+    }
+    async updateBlog(dto: UpdateBlogDto) {
+        const blog = await this.blogsRepository.findOrNotFoundFail(dto.id);
+        blog.updateBlog(dto);
         await this.blogsRepository.save(blog);
     }
 }

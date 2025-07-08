@@ -5,3 +5,9 @@ export class CreateBlogInputDto implements CreateBlogDto {
     description: string;
     websiteUrl: string;
 }
+
+export class UpdateBlogInputDto {
+    name: string;
+    description: string;
+    websiteUrl: string;
+}
