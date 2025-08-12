@@ -78,6 +78,7 @@ export class BlogsControllers {
         const postId = await this.postsService.createPost({ ...body, blogId });
         return this.postsQueryRepository.getByIdOrNotFoundFail(postId);
     }
+
     @ApiParam({ name: 'blogId' })
     @Get(':blogId/posts')
     async getPostByBlogId(

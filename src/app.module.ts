@@ -6,6 +6,9 @@ import { BlogPlatformModule } from './modules/blogers-platform/blog-platform.mod
 import * as process from 'node:process';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
+import { APP_FILTER } from '@nestjs/core';
+import { AllHttpExceptionsFilter } from './core/exceptions/filters/all-exceptions.filter';
+import { DomainHttpExceptionsFilter } from './core/exceptions/filters/domain-exceptions.filter';
 
 @Module({
     imports: [
@@ -18,6 +21,15 @@ import { AppController } from './app.controller';
         TestingModule,
     ],
     controllers: [AppController],
-    providers: [],
+    providers: [
+        {
+            provide: APP_FILTER,
+            useClass: AllHttpExceptionsFilter,
+        },
+        {
+            provide: APP_FILTER,
+            useClass: DomainHttpExceptionsFilter,
+        },
+    ],
 })
 export class AppModule {}
