@@ -3,11 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { UserContextDto } from '../guards/dto/user-context.dto';
 import { CryptoService } from './crypto.service';
 import { UsersRepository } from '../infastructure/users.repository';
-import {
-    DomainException,
-    Extension,
-} from '../../../core/exceptions/domain-exceptions';
-import { DomainExceptionCode } from '../../../core/exceptions/domain-exception-codes';
 
 @Injectable()
 export class AuthService {
@@ -48,28 +43,5 @@ export class AuthService {
             accessToken,
             refreshToken,
         };
-    }
-
-    async validateUniqueUser(login: string, email: string) {
-        const user = await this.usersRepository.findUniqueUser(login, email);
-        if (!user) return;
-        const extensions: Extension[] = [];
-        if (user.login === login) {
-            extensions.push({
-                field: 'login',
-                message: 'login already exists',
-            });
-        }
-        if (user.email === email) {
-            extensions.push({
-                field: 'email',
-                message: 'email already exists',
-            });
-        }
-        throw new DomainException({
-            code: DomainExceptionCode.BadRequest,
-            message: 'registration error',
-            extensions,
-        });
     }
 }

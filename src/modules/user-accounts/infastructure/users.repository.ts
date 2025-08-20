@@ -33,10 +33,7 @@ export class UsersRepository {
         return user;
     }
 
-    async findUniqueUser(
-        login: string,
-        email: string,
-    ): Promise<UserDocument | null> {
+    async findUniqueUser(login: string, email: string) {
         return this.UserModel.findOne({ $or: [{ login }, { email }] });
     }
 }

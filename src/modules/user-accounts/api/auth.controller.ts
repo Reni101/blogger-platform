@@ -14,10 +14,14 @@ import { ExtractUserFromRequest } from '../guards/decorators/param/extract-user-
 import { ApiBody } from '@nestjs/swagger';
 import { CreateUserInputDto } from './input-dto/users.input-dto';
 import { Response } from 'express';
+import { UsersService } from '../application/users.service';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(
+        private authService: AuthService,
+        private usersService: UsersService,
+    ) {}
 
     @Post('login')
     @UseGuards(LocalAuthGuard)
@@ -41,6 +45,7 @@ export class AuthController {
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
+            maxAge: 1200000,
         });
         debugger;
         return { accessToken };
@@ -49,8 +54,8 @@ export class AuthController {
     @Post('registration')
     @HttpCode(HttpStatus.NO_CONTENT)
     async registration(@Body() body: CreateUserInputDto) {
-        await this.authService.validateUniqueUser(body.login, body.email);
-        // const userId = await this.userService.registerUser(body);
+        // await this.authService.validateUniqueUser(body.login, body.email);
+        const userId = await this.usersService.registerUser(body);
         // return this.usersQueryRepository.getByIdOrNotFoundFail(userId);
     }
 }
