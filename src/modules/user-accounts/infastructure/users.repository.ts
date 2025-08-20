@@ -36,4 +36,20 @@ export class UsersRepository {
     async findUniqueUser(login: string, email: string) {
         return this.UserModel.findOne({ $or: [{ login }, { email }] });
     }
+
+    async findByCodeOrNotFoundFail(code: string): Promise<UserDocument> {
+        const user = await this.UserModel.findOne({
+            deletedAt: null,
+            'emailConfirmation.confirmationCode': code,
+        });
+
+        if (!user) {
+            throw new DomainException({
+                code: DomainExceptionCode.NotFound,
+                message: 'user not found',
+            });
+        }
+
+        return user;
+    }
 }

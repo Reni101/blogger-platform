@@ -6,6 +6,7 @@ import {
     EmailConfirmationSchema,
 } from './email-confirmation.shema';
 import { add } from 'date-fns';
+import { v4 as uuid } from 'uuid';
 
 export const loginConstraints = {
     minLength: 3,
@@ -35,8 +36,6 @@ export class User {
     @Prop({
         type: String,
         required: true,
-        min: passwordConstraints.minLength,
-        max: passwordConstraints.minLength,
     })
     passwordHash: string;
 
@@ -65,7 +64,7 @@ export class User {
         user.passwordHash = dto.passwordHash;
         user.login = dto.login;
         user.emailConfirmation = {
-            confirmationCode: 'uuid',
+            confirmationCode: uuid(),
             expirationDate: add(new Date(), {
                 days: 1,
             }),
@@ -81,9 +80,13 @@ export class User {
         this.deletedAt = new Date();
     }
 
-    // setConfirmationCode(code: string) {
-    //     this.emailConfirmation.confirmationCode = code;
-    // }
+    confirmEmail() {
+        this.emailConfirmation = {
+            confirmationCode: this.emailConfirmation.confirmationCode,
+            isConfirmed: true,
+            expirationDate: new Date(),
+        };
+    }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

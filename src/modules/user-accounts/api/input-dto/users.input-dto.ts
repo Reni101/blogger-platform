@@ -13,7 +13,7 @@ export class CreateUserInputDto implements CreateUserDto {
     login: string;
 
     @IsString()
-    @Length(passwordConstraints.minLength, passwordConstraints.minLength)
+    @Length(passwordConstraints.minLength, passwordConstraints.maxLength)
     @Trim()
     password: string;
 

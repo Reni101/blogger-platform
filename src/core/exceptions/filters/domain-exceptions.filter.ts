@@ -54,7 +54,7 @@ export class DomainHttpExceptionsFilter implements ExceptionFilter {
             path: requestUrl,
             message: exception.message,
             code: exception.code,
-            extensions: exception.extensions,
+            errorsMessages: exception.extensions,
         };
     }
 }

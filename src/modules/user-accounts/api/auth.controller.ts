@@ -15,6 +15,7 @@ import { ApiBody } from '@nestjs/swagger';
 import { CreateUserInputDto } from './input-dto/users.input-dto';
 import { Response } from 'express';
 import { UsersService } from '../application/users.service';
+import { RegistrationConfirmationInputDto } from './input-dto/registration-confirmation.input-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -55,6 +56,15 @@ export class AuthController {
     @HttpCode(HttpStatus.NO_CONTENT)
     async registration(@Body() body: CreateUserInputDto) {
         await this.usersService.registerUser(body);
+        return;
+    }
+
+    @Post('registration-confirmation')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async registrationConfirmation(
+        @Body() body: RegistrationConfirmationInputDto,
+    ) {
+        await this.authService.registrationConfirmation(body.code);
         return;
     }
 }

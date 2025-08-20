@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { UserContextDto } from '../guards/dto/user-context.dto';
 import { CryptoService } from './crypto.service';
 import { UsersRepository } from '../infastructure/users.repository';
+import { DomainException } from '../../../core/exceptions/domain-exceptions';
+import { DomainExceptionCode } from '../../../core/exceptions/domain-exception-codes';
 
 @Injectable()
 export class AuthService {
@@ -43,5 +45,17 @@ export class AuthService {
             accessToken,
             refreshToken,
         };
+    }
+
+    async registrationConfirmation(code: string) {
+        const user = await this.usersRepository.findByCodeOrNotFoundFail(code);
+        if (user.emailConfirmation.isConfirmed) {
+            throw new DomainException({
+                code: DomainExceptionCode.BadRequest,
+                message: 'Email already confirmed',
+            });
+        }
+        user.confirmEmail();
+        await this.usersRepository.save(user);
     }
 }
