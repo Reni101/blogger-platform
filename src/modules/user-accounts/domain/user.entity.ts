@@ -2,16 +2,44 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 import { CreateUserDomainDto } from './dto/create-user.domain.dto';
 
+export const loginConstraints = {
+    minLength: 3,
+    maxLength: 10,
+};
+
+export const passwordConstraints = {
+    minLength: 6,
+    maxLength: 20,
+};
+
+export const emailConstraints = {
+    match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+};
+
 //флаг timestemp автоматичеки добавляет поля upatedAt и createdAt
 @Schema({ timestamps: true })
 export class User {
-    @Prop({ type: String, required: true, min: 5, max: 10 })
+    @Prop({
+        type: String,
+        required: true,
+        min: loginConstraints.minLength,
+        max: loginConstraints.minLength,
+    })
     login: string;
 
-    @Prop({ type: String, required: true })
+    @Prop({
+        type: String,
+        required: true,
+        min: passwordConstraints.minLength,
+        max: passwordConstraints.minLength,
+    })
     passwordHash: string;
 
-    @Prop({ type: String, min: 5, required: true })
+    @Prop({
+        type: String,
+        required: true,
+        match: emailConstraints.match,
+    })
     email: string;
 
     @Prop({ type: Boolean, required: true, default: false })

@@ -3,17 +3,17 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserModelType } from '../domain/user.entity';
 import { UsersRepository } from '../infastructure/users.repository';
-import { BcryptService } from '../infastructure/bcrypt.service';
+import { CryptoService } from './crypto.service';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User.name) private UserModel: UserModelType,
-        private bcryptService: BcryptService,
+        private cryptoService: CryptoService,
         private usersRepository: UsersRepository,
     ) {}
     async createUser(dto: CreateUserDto) {
-        const passwordHash = await this.bcryptService.generateHash(
+        const passwordHash = await this.cryptoService.createPasswordHash(
             dto.password,
         );
 

@@ -24,7 +24,6 @@ export class BasicAuthGuard implements CanActivate {
         // if (isPublic) {
         //     return true;
         // }
-
         if (!authHeader || !authHeader.startsWith('Basic ')) {
             throw new DomainException({
                 code: DomainExceptionCode.Unauthorized,
