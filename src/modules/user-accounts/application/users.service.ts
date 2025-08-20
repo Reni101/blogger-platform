@@ -6,6 +6,7 @@ import { UsersRepository } from '../infastructure/users.repository';
 import { CryptoService } from './crypto.service';
 import { DomainException } from '../../../core/exceptions/domain-exceptions';
 import { DomainExceptionCode } from '../../../core/exceptions/domain-exception-codes';
+import { EmailService } from '../../notifications/email.service';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +14,7 @@ export class UsersService {
         @InjectModel(User.name) private UserModel: UserModelType,
         private cryptoService: CryptoService,
         private usersRepository: UsersRepository,
+        private emailService: EmailService,
     ) {}
     async createUser(dto: CreateUserDto) {
         const uniqueUser = await this.usersRepository.findUniqueUser(
@@ -62,15 +64,12 @@ export class UsersService {
 
     async registerUser(dto: CreateUserDto) {
         const userId = await this.createUser(dto);
-        // const passwordHash = await this.cryptoService.createPasswordHash(
-        //     dto.password,
-        // );
-        //
-        // const user = this.UserModel.createInstance({
-        //     email: dto.email,
-        //     login: dto.login,
-        //     passwordHash: passwordHash,
-        // });
-        return userId;
+        const user = await this.usersRepository.findOrNotFoundFail(userId);
+        this.emailService
+            .sendConfirmationEmail(
+                user.email,
+                user.emailConfirmation.confirmationCode,
+            )
+            .catch(console.error);
     }
 }

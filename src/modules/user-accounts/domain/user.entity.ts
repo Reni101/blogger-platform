@@ -65,7 +65,7 @@ export class User {
         user.passwordHash = dto.passwordHash;
         user.login = dto.login;
         user.emailConfirmation = {
-            confirmationCode: null,
+            confirmationCode: 'uuid',
             expirationDate: add(new Date(), {
                 days: 1,
             }),
@@ -80,6 +80,10 @@ export class User {
         }
         this.deletedAt = new Date();
     }
+
+    // setConfirmationCode(code: string) {
+    //     this.emailConfirmation.confirmationCode = code;
+    // }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

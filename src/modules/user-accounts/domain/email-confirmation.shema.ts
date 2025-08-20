@@ -4,8 +4,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
     _id: false,
 })
 export class EmailConfirmation {
-    @Prop({ required: false, default: null, type: String, nullable: true })
-    confirmationCode: string | null;
+    @Prop({ required: true, type: String })
+    confirmationCode: string;
 
     @Prop({ type: Date, required: true })
     expirationDate: Date;

@@ -54,8 +54,7 @@ export class AuthController {
     @Post('registration')
     @HttpCode(HttpStatus.NO_CONTENT)
     async registration(@Body() body: CreateUserInputDto) {
-        // await this.authService.validateUniqueUser(body.login, body.email);
-        const userId = await this.usersService.registerUser(body);
-        // return this.usersQueryRepository.getByIdOrNotFoundFail(userId);
+        await this.usersService.registerUser(body);
+        return;
     }
 }

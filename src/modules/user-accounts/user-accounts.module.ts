@@ -12,6 +12,7 @@ import { AuthController } from './api/auth.controller';
 import { AuthService } from './application/auth.service';
 import { LocalStrategy } from './guards/local/local.strategy';
 import { ConfigModule } from '@nestjs/config';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
             secret: process.env.SECRET_KEY,
             signOptions: { expiresIn: '5m' }, // Время жизни токена
         }),
+        NotificationsModule,
     ],
     controllers: [UsersController, AuthController],
     providers: [

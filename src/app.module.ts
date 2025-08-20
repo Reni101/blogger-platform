@@ -9,6 +9,7 @@ import { AppController } from './app.controller';
 import { APP_FILTER } from '@nestjs/core';
 import { AllHttpExceptionsFilter } from './core/exceptions/filters/all-exceptions.filter';
 import { DomainHttpExceptionsFilter } from './core/exceptions/filters/domain-exceptions.filter';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { DomainHttpExceptionsFilter } from './core/exceptions/filters/domain-exc
         UserAccountsModule,
         BlogPlatformModule,
         TestingModule,
+        NotificationsModule,
     ],
     controllers: [AppController],
     providers: [
