@@ -31,7 +31,7 @@ export class AuthController {
         schema: {
             type: 'object',
             properties: {
-                login: { type: 'string', example: 'maxim' },
+                loginOrEmail: { type: 'string', example: 'maxim1' },
                 password: { type: 'string', example: 'maxim1' },
             },
         },
@@ -48,7 +48,7 @@ export class AuthController {
             secure: true,
             maxAge: 1200000,
         });
-        debugger;
+
         return { accessToken };
     }
 

@@ -70,11 +70,11 @@ export class UsersService {
     async registerUser(dto: CreateUserDto) {
         const userId = await this.createUser(dto);
         const user = await this.usersRepository.findOrNotFoundFail(userId);
-        this.emailService
-            .sendConfirmationEmail(
-                user.email,
-                user.emailConfirmation.confirmationCode,
-            )
-            .catch(console.error);
+        // this.emailService
+        //     .sendConfirmationEmail(
+        //         user.email,
+        //         user.emailConfirmation.confirmationCode,
+        //     )
+        //     .catch(console.error);
     }
 }

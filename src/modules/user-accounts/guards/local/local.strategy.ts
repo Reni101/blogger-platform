@@ -9,22 +9,27 @@ import { AuthService } from '../../application/auth.service';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(private authService: AuthService) {
-        super({ usernameField: 'login' });
+        super({ usernameField: 'loginOrEmail' });
     }
 
     //validate возвращает то, что впоследствии будет записано в req.user
     async validate(
-        username: string,
+        loginOrEmail: string,
         password: string,
     ): Promise<UserContextDto> {
-        const user = await this.authService.validateUser(username, password);
-        if (!user) {
+        const userId = await this.authService.validateUser(
+            loginOrEmail,
+            password,
+        );
+        debugger;
+
+        if (!userId) {
             throw new DomainException({
                 code: DomainExceptionCode.Unauthorized,
-                message: 'Invalid username or password',
+                message: 'Invalid loginOrEmail or password',
             });
         }
 
-        return user;
+        return userId;
     }
 }

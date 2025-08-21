@@ -15,6 +15,14 @@ export class UsersRepository {
     async findByLogin(login: string): Promise<UserDocument | null> {
         return this.UserModel.findOne({ login: login, deletedAt: null });
     }
+    async findByLoginOrEmail(
+        loginOrEmail: string,
+    ): Promise<UserDocument | null> {
+        return this.UserModel.findOne({
+            $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
+            deletedAt: null,
+        });
+    }
 
     async save(user: UserDocument) {
         await user.save();
