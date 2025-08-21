@@ -4,7 +4,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserModelType } from '../domain/user.entity';
 import { UsersRepository } from '../infastructure/users.repository';
 import { CryptoService } from './crypto.service';
-import { DomainException } from '../../../core/exceptions/domain-exceptions';
+import {
+    DomainException,
+    Extension,
+} from '../../../core/exceptions/domain-exceptions';
 import { DomainExceptionCode } from '../../../core/exceptions/domain-exception-codes';
 import { EmailService } from '../../notifications/email.service';
 
@@ -21,26 +24,28 @@ export class UsersService {
             dto.login,
             dto.email,
         );
+
         if (uniqueUser) {
+            const extensions: Extension[] = [];
+            if (uniqueUser.login === dto.login) {
+                extensions.push({
+                    field: 'login',
+                    message: 'login already exists',
+                });
+            }
+            if (uniqueUser.email === dto.email) {
+                extensions.push({
+                    field: 'email',
+                    message: 'email already exists',
+                });
+            }
+
             throw new DomainException({
                 code: DomainExceptionCode.BadRequest,
-                message: 'User with the same login or email already exists',
-                // extensions,
+                message: 'error creating user',
+                extensions,
             });
         }
-        // const extensions: Extension[] = [];
-        // if (uniqueUser.login === dto.login) {
-        //     extensions.push({
-        //         field: 'login',
-        //         message: 'login already exists',
-        //     });
-        // }
-        // if (uniqueUser.email === dto.email) {
-        //     extensions.push({
-        //         field: 'email',
-        //         message: 'email already exists',
-        //     });
-        // }
 
         const passwordHash = await this.cryptoService.createPasswordHash(
             dto.password,
