@@ -810,7 +810,8 @@ window.onload = function() {
               "type": "string"
             },
             "websiteUrl": {
-              "type": "string"
+              "type": "string",
+              "format": "email"
             }
           },
           "required": [
@@ -829,7 +830,8 @@ window.onload = function() {
               "type": "string"
             },
             "websiteUrl": {
-              "type": "string"
+              "type": "string",
+              "format": "email"
             }
           },
           "required": [
@@ -847,6 +849,9 @@ window.onload = function() {
             "shortDescription": {
               "type": "string"
             },
+            "s": {
+              "type": "object"
+            },
             "content": {
               "type": "string"
             }
@@ -854,6 +859,7 @@ window.onload = function() {
           "required": [
             "title",
             "shortDescription",
+            "s",
             "content"
           ]
         },
