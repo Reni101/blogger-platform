@@ -10,7 +10,6 @@ import {
 } from '../../../core/exceptions/domain-exceptions';
 import { DomainExceptionCode } from '../../../core/exceptions/domain-exception-codes';
 import { EmailService } from '../../notifications/email.service';
-import * as process from 'node:process';
 
 @Injectable()
 export class UsersService {
@@ -71,13 +70,12 @@ export class UsersService {
     async registerUser(dto: CreateUserDto) {
         const userId = await this.createUser(dto);
         const user = await this.usersRepository.findOrNotFoundFail(userId);
-        if (process.env.NODE_ENV !== 'production') {
-            this.emailService
-                .sendConfirmationEmail(
-                    user.email,
-                    user.emailConfirmation.confirmationCode,
-                )
-                .catch(console.error);
-        }
+
+        this.emailService
+            .sendConfirmationEmail(
+                user.email,
+                user.emailConfirmation.confirmationCode,
+            )
+            .catch(console.error);
     }
 }
