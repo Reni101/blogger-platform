@@ -12,9 +12,6 @@ export class UsersRepository {
         return this.UserModel.findOne({ _id: id, deletedAt: null });
     }
 
-    async findByLogin(login: string): Promise<UserDocument | null> {
-        return this.UserModel.findOne({ login: login, deletedAt: null });
-    }
     async findByLoginOrEmail(
         loginOrEmail: string,
     ): Promise<UserDocument | null> {
@@ -50,6 +47,18 @@ export class UsersRepository {
             deletedAt: null,
             'emailConfirmation.confirmationCode': code,
         });
+
+        if (!user) {
+            throw new DomainException({
+                code: DomainExceptionCode.NotFound,
+                message: 'user not found',
+            });
+        }
+
+        return user;
+    }
+    async findByEmailNotFoundFail(email: string): Promise<UserDocument> {
+        const user = await this.UserModel.findOne({ deletedAt: null, email });
 
         if (!user) {
             throw new DomainException({

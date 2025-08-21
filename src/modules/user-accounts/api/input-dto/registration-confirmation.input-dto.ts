@@ -1,7 +1,15 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsEmail, IsString, IsUUID } from 'class-validator';
+import { Trim } from '../../../../core/decorators/transform/trim';
 
 export class RegistrationConfirmationInputDto {
     @IsString()
     @IsUUID()
+    @Trim()
     code: string;
+}
+
+export class RegistrationEmailResendingInputDto {
+    @Trim()
+    @IsEmail()
+    email: string;
 }
