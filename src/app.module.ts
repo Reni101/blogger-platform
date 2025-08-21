@@ -21,9 +21,7 @@ import { GLOBAL_PREFIX } from './setup/global-prefix.setup';
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', 'swagger-static'),
             serveRoot:
-                process.env.NODE_ENV === 'development'
-                    ? '/'
-                    : `/${GLOBAL_PREFIX}`,
+                process.env.NODE_ENV === 'development' ? '/' : `/swagger`,
         }),
         UserAccountsModule,
         BlogPlatformModule,
