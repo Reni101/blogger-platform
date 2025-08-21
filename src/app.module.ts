@@ -14,9 +14,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 @Module({
     imports: [
         ConfigModule.forRoot(),
-        MongooseModule.forRoot(
-            `${process.env.MONGO_URL}/${process.env.DB_NAME}`,
-        ),
+        MongooseModule.forRoot(process.env.MONGO_URL ?? ''),
         UserAccountsModule,
         BlogPlatformModule,
         TestingModule,
