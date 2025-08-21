@@ -12,6 +12,7 @@ import { DomainHttpExceptionsFilter } from './core/exceptions/filters/domain-exc
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { GLOBAL_PREFIX } from './setup/global-prefix.setup';
 
 @Module({
     imports: [
@@ -20,7 +21,9 @@ import { join } from 'path';
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', 'swagger-static'),
             serveRoot:
-                process.env.NODE_ENV === 'development' ? '/' : '/swagger',
+                process.env.NODE_ENV === 'development'
+                    ? '/'
+                    : `/${GLOBAL_PREFIX}`,
         }),
         UserAccountsModule,
         BlogPlatformModule,
