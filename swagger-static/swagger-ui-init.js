@@ -811,7 +811,7 @@ window.onload = function() {
             },
             "websiteUrl": {
               "type": "string",
-              "format": "email"
+              "format": "uri"
             }
           },
           "required": [
@@ -831,7 +831,7 @@ window.onload = function() {
             },
             "websiteUrl": {
               "type": "string",
-              "format": "email"
+              "format": "uri"
             }
           },
           "required": [
@@ -849,9 +849,6 @@ window.onload = function() {
             "shortDescription": {
               "type": "string"
             },
-            "s": {
-              "type": "object"
-            },
             "content": {
               "type": "string"
             }
@@ -859,7 +856,6 @@ window.onload = function() {
           "required": [
             "title",
             "shortDescription",
-            "s",
             "content"
           ]
         },

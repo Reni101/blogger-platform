@@ -1,5 +1,5 @@
 import { CreateBlogDto } from '../../dto/create-blog.dto';
-import { IsEmail, IsString } from 'class-validator';
+import { IsString, IsUrl } from 'class-validator';
 import { Trim } from '../../../../core/decorators/transform/trim';
 
 export class CreateBlogInputDto implements CreateBlogDto {
@@ -12,7 +12,7 @@ export class CreateBlogInputDto implements CreateBlogDto {
     description: string;
 
     @IsString()
-    @IsEmail()
+    @IsUrl()
     @Trim()
     websiteUrl: string;
 }
@@ -27,7 +27,7 @@ export class UpdateBlogInputDto {
     description: string;
 
     @IsString()
-    @IsEmail()
+    @IsUrl()
     @Trim()
     websiteUrl: string;
 }
@@ -42,6 +42,5 @@ export class CreatePostByBlogIdInputDto {
 
     @IsString()
     @Trim()
-    s;
     content: string;
 }
