@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 // api
-export const GLOBAL_PREFIX = '';
+export const GLOBAL_PREFIX = 'swagger';
 
 export function globalPrefixSetup(app: INestApplication) {
     //специальный метод, который добавляет ко всем маршрутам /GLOBAL_PREFIX

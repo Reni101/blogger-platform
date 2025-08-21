@@ -10,11 +10,18 @@ import { APP_FILTER } from '@nestjs/core';
 import { AllHttpExceptionsFilter } from './core/exceptions/filters/all-exceptions.filter';
 import { DomainHttpExceptionsFilter } from './core/exceptions/filters/domain-exceptions.filter';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
     imports: [
         ConfigModule.forRoot(),
         MongooseModule.forRoot(process.env.MONGO_URL ?? ''),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'swagger-static'),
+            serveRoot:
+                process.env.NODE_ENV === 'development' ? '/' : '/swagger',
+        }),
         UserAccountsModule,
         BlogPlatformModule,
         TestingModule,
