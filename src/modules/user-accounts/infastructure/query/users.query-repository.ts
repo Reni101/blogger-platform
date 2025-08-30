@@ -55,7 +55,7 @@ export class UsersQueryRepository {
         });
 
         if (!user) {
-            throw new NotFoundException('user not found');
+            throw new NotFoundException('users not found');
         }
 
         return UserViewDto.mapToView(user);

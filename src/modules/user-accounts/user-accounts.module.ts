@@ -11,12 +11,14 @@ import { CryptoService } from './application/crypto.service';
 import { AuthController } from './api/auth.controller';
 import { AuthService } from './application/auth.service';
 import { LocalStrategy } from './guards/local/local.strategy';
-import { ConfigModule } from '@nestjs/config';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { CreateUserUseCase } from './application/use-cases/admins/create-user.use-case';
+import { RegisterUserUseCase } from './application/use-cases/users/register-user.use-case';
+
+const usersUseCases = [CreateUserUseCase, RegisterUserUseCase];
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
         JwtModule.register({
             secret: process.env.SECRET_KEY,
@@ -33,6 +35,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
 
         AuthService,
         LocalStrategy,
+        ...usersUseCases,
     ],
 })
 export class UserAccountsModule {}

@@ -12,7 +12,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         super({ usernameField: 'loginOrEmail' });
     }
 
-    //validate возвращает то, что впоследствии будет записано в req.user
+    //validate возвращает то, что впоследствии будет записано в req.users
     async validate(
         loginOrEmail: string,
         password: string,
@@ -21,7 +21,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
             loginOrEmail,
             password,
         );
-        debugger;
 
         if (!userId) {
             throw new DomainException({

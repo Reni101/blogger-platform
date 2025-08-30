@@ -19,12 +19,14 @@ import {
     RegistrationConfirmationInputDto,
     RegistrationEmailResendingInputDto,
 } from './input-dto/registration-confirmation.input-dto';
+import { RegisterUserUseCase } from '../application/use-cases/users/register-user.use-case';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private authService: AuthService,
         private usersService: UsersService,
+        private registerUserUseCase: RegisterUserUseCase,
     ) {}
 
     @Post('login')
@@ -58,7 +60,7 @@ export class AuthController {
     @Post('registration')
     @HttpCode(HttpStatus.NO_CONTENT)
     async registration(@Body() body: CreateUserInputDto) {
-        await this.usersService.registerUser(body);
+        await this.registerUserUseCase.execute(body);
         return;
     }
 

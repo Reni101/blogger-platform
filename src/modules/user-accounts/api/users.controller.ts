@@ -18,6 +18,7 @@ import { CreateUserInputDto } from './input-dto/users.input-dto';
 import { UsersService } from '../application/users.service';
 import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { BasicAuthGuard } from '../guards/basic/bacis-auth.guard';
+import { CreateUserUseCase } from '../application/use-cases/admins/create-user.use-case';
 
 @Controller('users')
 @ApiSecurity('basic')
@@ -26,6 +27,7 @@ export class UsersController {
     constructor(
         private usersQueryRepository: UsersQueryRepository,
         private usersService: UsersService,
+        private createUserUseCase: CreateUserUseCase,
     ) {}
 
     @Get()
@@ -36,7 +38,7 @@ export class UsersController {
     }
     @Post()
     async createUser(@Body() body: CreateUserInputDto): Promise<UserViewDto> {
-        const userId = await this.usersService.createUser(body);
+        const userId = await this.createUserUseCase.execute(body);
         return this.usersQueryRepository.getByIdOrNotFoundFail(userId);
     }
     @ApiParam({ name: 'id' })

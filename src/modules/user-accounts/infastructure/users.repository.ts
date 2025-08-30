@@ -31,7 +31,7 @@ export class UsersRepository {
         if (!user) {
             throw new DomainException({
                 code: DomainExceptionCode.NotFound,
-                message: 'user not found',
+                message: 'users not found',
             });
         }
 
@@ -51,7 +51,7 @@ export class UsersRepository {
         if (!user) {
             throw new DomainException({
                 code: DomainExceptionCode.NotFound,
-                message: 'user not found',
+                message: 'users not found',
             });
         }
 
@@ -63,7 +63,7 @@ export class UsersRepository {
         if (!user) {
             throw new DomainException({
                 code: DomainExceptionCode.BadRequest,
-                message: 'user not found',
+                message: 'users not found',
                 extensions: [{ message: 'email doesnt exist', field: 'email' }],
             });
         }
