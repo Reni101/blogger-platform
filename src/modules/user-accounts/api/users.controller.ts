@@ -15,10 +15,10 @@ import { UsersQueryRepository } from '../infastructure/query/users.query-reposit
 import { UserViewDto } from './view-dto/users.view-dto';
 import { PaginatedViewDto } from '../../../core/dto/base.paginated.view-dto';
 import { CreateUserInputDto } from './input-dto/users.input-dto';
-import { UsersService } from '../application/users.service';
 import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { BasicAuthGuard } from '../guards/basic/bacis-auth.guard';
 import { CreateUserUseCase } from '../application/use-cases/admins/create-user.use-case';
+import { DeleteUserUseCase } from '../application/use-cases/admins/delete-user.use-case';
 
 @Controller('users')
 @ApiSecurity('basic')
@@ -26,8 +26,8 @@ import { CreateUserUseCase } from '../application/use-cases/admins/create-user.u
 export class UsersController {
     constructor(
         private usersQueryRepository: UsersQueryRepository,
-        private usersService: UsersService,
         private createUserUseCase: CreateUserUseCase,
+        private deleteUserUseCase: DeleteUserUseCase,
     ) {}
 
     @Get()
@@ -45,6 +45,6 @@ export class UsersController {
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteUser(@Param('id') id: string): Promise<void> {
-        return this.usersService.deleteUser(id);
+        return this.deleteUserUseCase.execute(id);
     }
 }

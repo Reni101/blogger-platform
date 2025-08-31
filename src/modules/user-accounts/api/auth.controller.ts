@@ -14,7 +14,6 @@ import { ExtractUserFromRequest } from '../guards/decorators/param/extract-user-
 import { ApiBody } from '@nestjs/swagger';
 import { CreateUserInputDto } from './input-dto/users.input-dto';
 import { Response } from 'express';
-import { UsersService } from '../application/users.service';
 import {
     RegistrationConfirmationInputDto,
     RegistrationEmailResendingInputDto,
@@ -25,7 +24,6 @@ import { RegisterUserUseCase } from '../application/use-cases/users/register-use
 export class AuthController {
     constructor(
         private authService: AuthService,
-        private usersService: UsersService,
         private registerUserUseCase: RegisterUserUseCase,
     ) {}
 

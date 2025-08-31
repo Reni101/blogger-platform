@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './api/users.controller';
-import { UsersService } from './application/users.service';
 import { UsersQueryRepository } from './infastructure/query/users.query-repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './domain/user.entity';
@@ -14,8 +13,14 @@ import { LocalStrategy } from './guards/local/local.strategy';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { CreateUserUseCase } from './application/use-cases/admins/create-user.use-case';
 import { RegisterUserUseCase } from './application/use-cases/users/register-user.use-case';
+import { DeleteUserUseCase } from './application/use-cases/admins/delete-user.use-case';
+import { UsersService } from './application/users.service';
 
-const usersUseCases = [CreateUserUseCase, RegisterUserUseCase];
+const usersUseCases = [
+    CreateUserUseCase,
+    RegisterUserUseCase,
+    DeleteUserUseCase,
+];
 
 @Module({
     imports: [
