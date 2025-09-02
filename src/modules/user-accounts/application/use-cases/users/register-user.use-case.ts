@@ -6,9 +6,16 @@ import { EmailService } from '../../../../notifications/email.service';
 import { CryptoService } from '../../crypto.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersService } from '../../users.service';
+import { ICommandHandler } from '@nestjs/cqrs';
+
+export class RegisterUserCommand {
+    constructor(public dto: CreateUserDto) {}
+}
 
 @Injectable()
-export class RegisterUserUseCase {
+export class RegisterUserUseCase
+    implements ICommandHandler<RegisterUserCommand>
+{
     constructor(
         @InjectModel(User.name) private UserModel: UserModelType,
         private usersService: UsersService,
@@ -17,17 +24,13 @@ export class RegisterUserUseCase {
         private emailService: EmailService,
     ) {}
 
-    async execute(dto: CreateUserDto) {
-        const { login, email } = dto;
-        const uniqueUser = await this.usersRepository.findUniqueUser(
-            login,
-            email,
-        );
-        this.usersService.validateUniqueUser(uniqueUser, { login, email });
+    async execute({ dto }: RegisterUserCommand) {
+        const { login, email, password } = dto;
 
-        const passwordHash = await this.cryptoService.createPasswordHash(
-            dto.password,
-        );
+        await this.usersService.validateUniqueUser({ login, email });
+
+        const passwordHash =
+            await this.cryptoService.createPasswordHash(password);
 
         const user = this.UserModel.createInstance({
             email,

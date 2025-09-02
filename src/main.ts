@@ -14,7 +14,8 @@ async function bootstrap() {
     const port = process.env.PORT ?? 3000;
 
     await app.listen(port);
-    Logger.log(`🚀 Application is running on: http://localhost:${port}/`);
+    // Logger.log(`🚀 Application is running on: http://localhost:${port}/`);
+    Logger.log(`🚀 Swagger on: http://localhost:${port}/swagger`);
 
     // if (process.env.NODE_ENV === 'development') {
     //     // write swagger ui files

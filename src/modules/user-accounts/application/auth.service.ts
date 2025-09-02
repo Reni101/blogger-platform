@@ -26,7 +26,7 @@ export class AuthService {
             return null;
         }
 
-        const isPasswordValid = await this.cryptoService.comparePasswords({
+        const isPasswordValid = await this.cryptoService.comparePassword({
             password,
             hash: user.passwordHash,
         });

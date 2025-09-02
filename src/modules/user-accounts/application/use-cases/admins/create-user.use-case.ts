@@ -17,12 +17,8 @@ export class CreateUserUseCase {
 
     async execute(dto: CreateUserDto) {
         const { login, email } = dto;
-        const uniqueUser = await this.usersRepository.findUniqueUser(
-            login,
-            email,
-        );
 
-        this.usersService.validateUniqueUser(uniqueUser, { login, email });
+        await this.usersService.validateUniqueUser({ login, email });
 
         const passwordHash = await this.cryptoService.createPasswordHash(
             dto.password,

@@ -1,17 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { UserDocument } from '../domain/user.entity';
 import {
     DomainException,
     Extension,
 } from '../../../core/exceptions/domain-exceptions';
 import { DomainExceptionCode } from '../../../core/exceptions/domain-exception-codes';
+import { UsersRepository } from '../infastructure/users.repository';
 
 @Injectable()
 export class UsersService {
-    validateUniqueUser(
-        uniqueUser: UserDocument | null,
-        dto: { login: string; email: string },
-    ) {
+    constructor(private readonly usersRepository: UsersRepository) {}
+
+    async validateUniqueUser(dto: { login: string; email: string }) {
+        const { login, email } = dto;
+        const uniqueUser = await this.usersRepository.findUniqueUser(
+            login,
+            email,
+        );
         if (uniqueUser) {
             const extensions: Extension[] = [];
             if (uniqueUser.login === dto.login) {
