@@ -12,9 +12,11 @@ import { DomainHttpExceptionsFilter } from './core/exceptions/filters/domain-exc
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
     imports: [
+        CqrsModule.forRoot(),
         ConfigModule.forRoot({ isGlobal: true }),
         MongooseModule.forRoot(process.env.MONGO_URL ?? ''),
         ServeStaticModule.forRoot({

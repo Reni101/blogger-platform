@@ -18,13 +18,14 @@ import {
     RegistrationConfirmationInputDto,
     RegistrationEmailResendingInputDto,
 } from './input-dto/registration-confirmation.input-dto';
-import { RegisterUserUseCase } from '../application/use-cases/users/register-user.use-case';
+import { CommandBus } from '@nestjs/cqrs';
+import { RegisterUserCommand } from '../application/use-cases/users/register-user.use-case';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private authService: AuthService,
-        private registerUserUseCase: RegisterUserUseCase,
+        private commandBus: CommandBus,
     ) {}
 
     @Post('login')
@@ -58,8 +59,9 @@ export class AuthController {
     @Post('registration')
     @HttpCode(HttpStatus.NO_CONTENT)
     async registration(@Body() body: CreateUserInputDto) {
-        await this.registerUserUseCase.execute(body);
-        return;
+        return this.commandBus.execute<RegisterUserCommand, void>(
+            new RegisterUserCommand(body),
+        );
     }
 
     @Post('registration-confirmation')

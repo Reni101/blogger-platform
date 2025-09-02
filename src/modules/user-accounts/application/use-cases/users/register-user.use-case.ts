@@ -1,18 +1,17 @@
 import { User, UserModelType } from '../../../domain/user.entity';
-import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../../../dto/create-user.dto';
 import { UsersRepository } from '../../../infastructure/users.repository';
 import { EmailService } from '../../../../notifications/email.service';
 import { CryptoService } from '../../crypto.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersService } from '../../users.service';
-import { ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 export class RegisterUserCommand {
     constructor(public dto: CreateUserDto) {}
 }
 
-@Injectable()
+@CommandHandler(RegisterUserCommand)
 export class RegisterUserUseCase
     implements ICommandHandler<RegisterUserCommand>
 {
