@@ -18,14 +18,22 @@ import { UsersService } from './application/users.service';
 import { LoginUserUseCase } from './application/use-cases/auth/login.use-case';
 import { RegistrationConfirmationUseCase } from './application/use-cases/auth/registration-confirmation.use-case';
 import { RegistrationEmailResendingUseCase } from './application/use-cases/auth/registration-email-resending.use-case';
+import { NewPasswordUseCase } from './application/use-cases/auth/new-password.use-case';
+import { PasswordRecoveryUseCase } from './application/use-cases/auth/password-recovery.use-case';
+import { JwtStrategy } from './guards/bearer/jwt.strategy';
 
 const usersUseCases = [
     CreateUserUseCase,
     RegisterUserUseCase,
     DeleteUserUseCase,
+];
+
+const authUseCases = [
     LoginUserUseCase,
     RegistrationConfirmationUseCase,
     RegistrationEmailResendingUseCase,
+    PasswordRecoveryUseCase,
+    NewPasswordUseCase,
 ];
 
 @Module({
@@ -46,6 +54,9 @@ const usersUseCases = [
         AuthService,
         LocalStrategy,
         ...usersUseCases,
+        ...authUseCases,
+        JwtStrategy,
     ],
+    exports: [JwtStrategy],
 })
 export class UserAccountsModule {}

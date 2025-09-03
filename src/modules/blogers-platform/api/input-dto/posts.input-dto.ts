@@ -1,4 +1,4 @@
-import { CreatePostDto } from '../../dto/create-post.dto';
+import { CreatePostDto } from '../../dto/posts/create-post.dto';
 import { IsString } from 'class-validator';
 import { Trim } from '../../../../core/decorators/transform/trim';
 

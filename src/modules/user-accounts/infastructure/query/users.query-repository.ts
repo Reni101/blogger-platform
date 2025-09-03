@@ -2,9 +2,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserModelType } from '../../domain/user.entity';
 import { GetUsersQueryParams } from '../../api/input-dto/get-users-query-params.input-dto';
 import { PaginatedViewDto } from '../../../../core/dto/base.paginated.view-dto';
-import { UserViewDto } from '../../api/view-dto/users.view-dto';
+import { UsersViewDto } from '../../api/view-dto/users.view-dto';
 import { FilterQuery } from 'mongoose';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { UserViewDto } from '../../api/view-dto/user.view-dto';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -12,7 +13,7 @@ export class UsersQueryRepository {
 
     async getAll(
         query: GetUsersQueryParams,
-    ): Promise<PaginatedViewDto<UserViewDto[]>> {
+    ): Promise<PaginatedViewDto<UsersViewDto[]>> {
         const filter: FilterQuery<User> = {
             deletedAt: null,
         };
@@ -38,7 +39,7 @@ export class UsersQueryRepository {
             .lean();
         const totalCount = await this.UserModel.countDocuments(filter);
 
-        const items = users.map(UserViewDto.mapToView);
+        const items = users.map(UsersViewDto.mapToView);
 
         return PaginatedViewDto.mapToView({
             items,
@@ -48,7 +49,19 @@ export class UsersQueryRepository {
         });
     }
 
-    async getByIdOrNotFoundFail(id: string): Promise<UserViewDto> {
+    async getByIdOrNotFoundFail(id: string): Promise<UsersViewDto> {
+        const user = await this.UserModel.findOne({
+            _id: id,
+            deletedAt: null,
+        });
+
+        if (!user) {
+            throw new NotFoundException('users not found');
+        }
+
+        return UsersViewDto.mapToView(user);
+    }
+    async getUserById(id: string): Promise<UserViewDto> {
         const user = await this.UserModel.findOne({
             _id: id,
             deletedAt: null,

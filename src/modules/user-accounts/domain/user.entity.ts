@@ -55,6 +55,9 @@ export class User {
     @Prop({ type: Date, nullable: true, default: null })
     deletedAt: Date | null;
 
+    @Prop({ type: String, nullable: true, default: null })
+    recoveryCode: string | null;
+
     @Prop({ type: EmailConfirmationSchema })
     emailConfirmation: EmailConfirmation;
 
@@ -92,6 +95,12 @@ export class User {
             isConfirmed: false,
             expirationDate: add(new Date(), { days: 1 }),
         };
+    }
+    updateRecoveryCode(code: string) {
+        this.recoveryCode = code;
+    }
+    updatePasswordHash(password: string) {
+        this.passwordHash = password;
     }
 }
 

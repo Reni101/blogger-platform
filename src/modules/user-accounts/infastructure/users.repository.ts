@@ -70,4 +70,25 @@ export class UsersRepository {
 
         return user;
     }
+    async findByRecoveryCodeNotFoundFail(recoveryCode: string) {
+        const user = await this.UserModel.findOne({
+            deletedAt: null,
+            recoveryCode,
+        });
+
+        if (!user) {
+            throw new DomainException({
+                code: DomainExceptionCode.BadRequest,
+                message: 'users not found',
+                extensions: [
+                    {
+                        message: 'RecoveryCode doesnt exist',
+                        field: 'recoveryCode',
+                    },
+                ],
+            });
+        }
+
+        return user;
+    }
 }

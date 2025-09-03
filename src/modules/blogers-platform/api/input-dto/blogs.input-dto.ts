@@ -1,4 +1,4 @@
-import { CreateBlogDto } from '../../dto/create-blog.dto';
+import { CreateBlogDto } from '../../dto/blogs/create-blog.dto';
 import { IsString, IsUrl } from 'class-validator';
 import { Trim } from '../../../../core/decorators/transform/trim';
 

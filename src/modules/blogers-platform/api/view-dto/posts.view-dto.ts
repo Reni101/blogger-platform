@@ -1,4 +1,4 @@
-import { PostDocument } from '../../domain/post.enity';
+import { PostDocument } from '../../domain/post/post.enity';
 import { LikeStatusEnum } from '../../domain/const/LikeStatusEnum';
 
 export class PostViewDto {

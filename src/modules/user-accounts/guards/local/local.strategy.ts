@@ -17,18 +17,18 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         loginOrEmail: string,
         password: string,
     ): Promise<UserContextDto> {
-        const userId = await this.authService.validateUser(
+        const user = await this.authService.validateUser(
             loginOrEmail,
             password,
         );
 
-        if (!userId) {
+        if (!user) {
             throw new DomainException({
                 code: DomainExceptionCode.Unauthorized,
                 message: 'Invalid loginOrEmail or password',
             });
         }
 
-        return userId;
+        return user;
     }
 }

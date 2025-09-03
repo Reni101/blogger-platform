@@ -9,8 +9,9 @@ import {
     Post,
     Put,
     Query,
+    UseGuards,
 } from '@nestjs/common';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { BlogViewDto } from './view-dto/blogs.view-dto';
 import { BlogsQueryRepository } from '../infastructure/query/blogs.query-repository';
 import {
@@ -24,6 +25,7 @@ import { GetBlogsQueryParams } from './input-dto/get-blogs-query-params.input-dt
 import { PostsQueryRepository } from '../infastructure/query/posts.query-repository';
 import { PostsService } from '../application/posts.service';
 import { GetPostsQueryParams } from './input-dto/get-posts-query-params.input-dto';
+import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
 
 @Controller('blogs')
 export class BlogsControllers {
@@ -40,12 +42,16 @@ export class BlogsControllers {
         return this.blogsQueryRepository.getByIdOrNotFoundFail(id);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @Post()
     async createBlog(@Body() body: CreateBlogInputDto): Promise<BlogViewDto> {
         const blogId = await this.blogsService.createBlog(body);
         return this.blogsQueryRepository.getByIdOrNotFoundFail(blogId);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @ApiParam({ name: 'id' })
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
@@ -53,6 +59,8 @@ export class BlogsControllers {
         return this.blogsService.deleteBlog(id);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @Put(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async updateBlog(
@@ -69,6 +77,8 @@ export class BlogsControllers {
         return this.blogsQueryRepository.getAll(query);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @ApiParam({ name: 'blogId' })
     @Post(':blogId/posts')
     async createPostByBlogId(

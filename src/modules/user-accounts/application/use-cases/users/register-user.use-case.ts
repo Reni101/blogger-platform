@@ -37,8 +37,6 @@ export class RegisterUserUseCase
             passwordHash,
         });
 
-        await this.usersRepository.save(user);
-
         this.emailService
             .sendConfirmationEmail(
                 user.email,

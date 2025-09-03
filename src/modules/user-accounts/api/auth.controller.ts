@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
     Post,
@@ -11,7 +12,7 @@ import { LocalAuthGuard } from '../guards/local/local-auth.guard';
 import { UserContextDto } from '../guards/dto/user-context.dto';
 import { AuthService } from '../application/auth.service';
 import { ExtractUserFromRequest } from '../guards/decorators/param/extract-user-from-request.decorator';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { CreateUserInputDto } from './input-dto/users.input-dto';
 import { Response } from 'express';
 import {
@@ -23,12 +24,19 @@ import { RegisterUserCommand } from '../application/use-cases/users/register-use
 import { LoginCommand } from '../application/use-cases/auth/login.use-case';
 import { RegistrationConfirmationCommand } from '../application/use-cases/auth/registration-confirmation.use-case';
 import { RegistrationEmailResendingCommand } from '../application/use-cases/auth/registration-email-resending.use-case';
+import { PasswordRecoveryInputDto } from './input-dto/password-recovery.input-dto';
+import { NewPasswordCommand } from '../application/use-cases/auth/new-password.use-case';
+import { PasswordRecoveryCommand } from '../application/use-cases/auth/password-recovery.use-case';
+import { NewPasswordInputDto } from './input-dto/new-password.input-dto';
+import { JwtAuthGuard } from '../guards/bearer/jwt-auth.guard';
+import { UsersQueryRepository } from '../infastructure/query/users.query-repository';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private authService: AuthService,
         private commandBus: CommandBus,
+        private usersQueryRepository: UsersQueryRepository,
     ) {}
 
     @Post('login')
@@ -38,8 +46,8 @@ export class AuthController {
         schema: {
             type: 'object',
             properties: {
-                loginOrEmail: { type: 'string', example: 'maxim1' },
-                password: { type: 'string', example: 'maxim1' },
+                loginOrEmail: { type: 'string', example: 'string' },
+                password: { type: 'string', example: 'admin123' },
             },
         },
     })
@@ -52,7 +60,6 @@ export class AuthController {
             { accessToken: string; refreshToken: string }
         >(new LoginCommand(user.id));
 
-        debugger;
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
@@ -78,8 +85,6 @@ export class AuthController {
         return this.commandBus.execute<RegistrationConfirmationCommand, void>(
             new RegistrationConfirmationCommand(body.code),
         );
-        // await this.authService.registrationConfirmation(body.code);
-        // ;
     }
 
     @Post('registration-email-resending')
@@ -90,5 +95,28 @@ export class AuthController {
         return this.commandBus.execute<RegistrationEmailResendingCommand, void>(
             new RegistrationEmailResendingCommand(body.email),
         );
+    }
+
+    @Post('password-recovery')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async passwordRecovery(@Body() body: PasswordRecoveryInputDto) {
+        return this.commandBus.execute<PasswordRecoveryCommand, void>(
+            new PasswordRecoveryCommand(body.email),
+        );
+    }
+
+    @Post('new-password')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async newPassword(@Body() body: NewPasswordInputDto) {
+        return this.commandBus.execute<NewPasswordCommand, void>(
+            new NewPasswordCommand(body),
+        );
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @Get('me')
+    async me(@ExtractUserFromRequest() user: UserContextDto) {
+        return this.usersQueryRepository.getUserById(user.id);
     }
 }
