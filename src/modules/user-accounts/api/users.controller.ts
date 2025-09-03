@@ -17,8 +17,9 @@ import { PaginatedViewDto } from '../../../core/dto/base.paginated.view-dto';
 import { CreateUserInputDto } from './input-dto/users.input-dto';
 import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { BasicAuthGuard } from '../guards/basic/bacis-auth.guard';
-import { CreateUserUseCase } from '../application/use-cases/admins/create-user.use-case';
-import { DeleteUserUseCase } from '../application/use-cases/admins/delete-user.use-case';
+import { CreateUserCommand } from '../application/use-cases/admins/create-user.use-case';
+import { DeleteUserCommand } from '../application/use-cases/admins/delete-user.use-case';
+import { CommandBus } from '@nestjs/cqrs';
 
 @Controller('users')
 @ApiSecurity('basic')
@@ -26,8 +27,7 @@ import { DeleteUserUseCase } from '../application/use-cases/admins/delete-user.u
 export class UsersController {
     constructor(
         private usersQueryRepository: UsersQueryRepository,
-        private createUserUseCase: CreateUserUseCase,
-        private deleteUserUseCase: DeleteUserUseCase,
+        private commandBus: CommandBus,
     ) {}
 
     @Get()
@@ -38,13 +38,17 @@ export class UsersController {
     }
     @Post()
     async createUser(@Body() body: CreateUserInputDto): Promise<UserViewDto> {
-        const userId = await this.createUserUseCase.execute(body);
+        const userId = await this.commandBus.execute<CreateUserCommand, string>(
+            new CreateUserCommand(body),
+        );
         return this.usersQueryRepository.getByIdOrNotFoundFail(userId);
     }
     @ApiParam({ name: 'id' })
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteUser(@Param('id') id: string): Promise<void> {
-        return this.deleteUserUseCase.execute(id);
+        return this.commandBus.execute<DeleteUserCommand, void>(
+            new DeleteUserCommand(id),
+        );
     }
 }

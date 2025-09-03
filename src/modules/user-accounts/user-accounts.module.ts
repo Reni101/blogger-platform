@@ -15,11 +15,17 @@ import { CreateUserUseCase } from './application/use-cases/admins/create-user.us
 import { RegisterUserUseCase } from './application/use-cases/users/register-user.use-case';
 import { DeleteUserUseCase } from './application/use-cases/admins/delete-user.use-case';
 import { UsersService } from './application/users.service';
+import { LoginUserUseCase } from './application/use-cases/auth/login.use-case';
+import { RegistrationConfirmationUseCase } from './application/use-cases/auth/registration-confirmation.use-case';
+import { RegistrationEmailResendingUseCase } from './application/use-cases/auth/registration-email-resending.use-case';
 
 const usersUseCases = [
     CreateUserUseCase,
     RegisterUserUseCase,
     DeleteUserUseCase,
+    LoginUserUseCase,
+    RegistrationConfirmationUseCase,
+    RegistrationEmailResendingUseCase,
 ];
 
 @Module({
@@ -37,7 +43,6 @@ const usersUseCases = [
         UsersQueryRepository,
         UsersRepository,
         CryptoService,
-
         AuthService,
         LocalStrategy,
         ...usersUseCases,

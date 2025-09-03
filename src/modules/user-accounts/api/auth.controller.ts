@@ -20,6 +20,9 @@ import {
 } from './input-dto/registration-confirmation.input-dto';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegisterUserCommand } from '../application/use-cases/users/register-user.use-case';
+import { LoginCommand } from '../application/use-cases/auth/login.use-case';
+import { RegistrationConfirmationCommand } from '../application/use-cases/auth/registration-confirmation.use-case';
+import { RegistrationEmailResendingCommand } from '../application/use-cases/auth/registration-email-resending.use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -44,9 +47,12 @@ export class AuthController {
         @ExtractUserFromRequest() user: UserContextDto,
         @Res({ passthrough: true }) res: Response,
     ): Promise<{ accessToken: string }> {
-        const { accessToken, refreshToken } = await this.authService.login(
-            user.id,
-        );
+        const { accessToken, refreshToken } = await this.commandBus.execute<
+            LoginCommand,
+            { accessToken: string; refreshToken: string }
+        >(new LoginCommand(user.id));
+
+        debugger;
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
@@ -69,8 +75,11 @@ export class AuthController {
     async registrationConfirmation(
         @Body() body: RegistrationConfirmationInputDto,
     ) {
-        await this.authService.registrationConfirmation(body.code);
-        return;
+        return this.commandBus.execute<RegistrationConfirmationCommand, void>(
+            new RegistrationConfirmationCommand(body.code),
+        );
+        // await this.authService.registrationConfirmation(body.code);
+        // ;
     }
 
     @Post('registration-email-resending')
@@ -78,7 +87,8 @@ export class AuthController {
     async registrationEmailResending(
         @Body() body: RegistrationEmailResendingInputDto,
     ) {
-        await this.authService.registrationEmailResending(body.email);
-        return;
+        return this.commandBus.execute<RegistrationEmailResendingCommand, void>(
+            new RegistrationEmailResendingCommand(body.email),
+        );
     }
 }
