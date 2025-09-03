@@ -11,6 +11,8 @@ import { PostsRepository } from './infastructure/posts.repository';
 import { PostsService } from './application/posts.service';
 import { PostsQueryRepository } from './infastructure/query/posts.query-repository';
 import { Comment, CommentSchema } from './domain/comment/comment.entity';
+import { CommentsController } from './api/comments.controller';
+import { CommentsQueryRepository } from './infastructure/query/comments.query-repository';
 
 @Module({
     imports: [
@@ -20,7 +22,7 @@ import { Comment, CommentSchema } from './domain/comment/comment.entity';
             { name: Comment.name, schema: CommentSchema },
         ]),
     ],
-    controllers: [BlogsControllers, PostsController],
+    controllers: [BlogsControllers, PostsController, CommentsController],
     providers: [
         BlogsService,
         BlogsRepository,
@@ -29,6 +31,8 @@ import { Comment, CommentSchema } from './domain/comment/comment.entity';
         PostsService,
         PostsRepository,
         PostsQueryRepository,
+
+        CommentsQueryRepository,
     ],
 })
 export class BlogPlatformModule {}
