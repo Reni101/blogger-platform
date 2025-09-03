@@ -9,6 +9,7 @@ import {
     Post,
     Put,
     Query,
+    UseGuards,
 } from '@nestjs/common';
 import {
     CreatePostInputDto,
@@ -17,9 +18,10 @@ import {
 import { PostsService } from '../application/posts.service';
 import { PostViewDto } from './view-dto/posts.view-dto';
 import { PostsQueryRepository } from '../infastructure/query/posts.query-repository';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { PaginatedViewDto } from '../../../core/dto/base.paginated.view-dto';
 import { GetPostsQueryParams } from './input-dto/get-posts-query-params.input-dto';
+import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -28,6 +30,8 @@ export class PostsController {
         private postsService: PostsService,
     ) {}
 
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @Post()
     async createPost(@Body() body: CreatePostInputDto): Promise<PostViewDto> {
         const postId = await this.postsService.createPost(body);
@@ -40,6 +44,8 @@ export class PostsController {
         return this.postsQueryRepository.getByIdOrNotFoundFail(id);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @ApiParam({ name: 'id' })
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
@@ -47,6 +53,8 @@ export class PostsController {
         return this.postsService.deletePost(id);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @Put(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async updatePost(

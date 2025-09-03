@@ -1,16 +1,23 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiParam } from '@nestjs/swagger';
+import {
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Param,
+    UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { CommentsQueryRepository } from '../infastructure/query/comments.query-repository';
+import { CommentService } from '../application/comment.service';
+import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
 
 @Controller('comments')
 export class CommentsController {
-    constructor(private commentsQueryRepository: CommentsQueryRepository) {} // private postsService: PostsService, //
-    //
-    // @Post()
-    // async createPost(@Body() body: CreatePostInputDto): Promise<PostViewDto> {
-    //     const postId = await this.postsService.createPost(body);
-    //     return this.postsQueryRepository.getByIdOrNotFoundFail(postId);
-    // }
+    constructor(
+        private commentsQueryRepository: CommentsQueryRepository,
+        private commentService: CommentService,
+    ) {}
 
     @ApiParam({ name: 'id' })
     @Get(':id')
@@ -18,12 +25,14 @@ export class CommentsController {
         return this.commentsQueryRepository.getByIdOrNotFoundFail(id);
     }
 
-    // @ApiParam({ name: 'id' })
-    // @Delete(':id')
-    // @HttpCode(HttpStatus.NO_CONTENT)
-    // async deletePost(@Param('id') id: string): Promise<void> {
-    //     return this.postsService.deletePost(id);
-    // }
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiParam({ name: 'id' })
+    @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteComment(@Param('id') id: string): Promise<void> {
+        return this.commentService.deleteComment(id);
+    }
     //
     // @Put(':id')
     // @HttpCode(HttpStatus.NO_CONTENT)
