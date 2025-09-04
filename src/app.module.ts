@@ -5,7 +5,6 @@ import { TestingModule } from './modules/testing/testing.module';
 import { BlogPlatformModule } from './modules/blogers-platform/blog-platform.module';
 import * as process from 'node:process';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
 import { APP_FILTER } from '@nestjs/core';
 import { AllHttpExceptionsFilter } from './core/exceptions/filters/all-exceptions.filter';
 import { DomainHttpExceptionsFilter } from './core/exceptions/filters/domain-exceptions.filter';
@@ -29,7 +28,7 @@ import { CqrsModule } from '@nestjs/cqrs';
         TestingModule,
         NotificationsModule,
     ],
-    controllers: [AppController],
+    controllers: [],
     providers: [
         {
             provide: APP_FILTER,

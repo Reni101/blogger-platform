@@ -1,10 +1,12 @@
 import {
+    Body,
     Controller,
     Delete,
     Get,
     HttpCode,
     HttpStatus,
     Param,
+    Put,
     UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
@@ -13,6 +15,7 @@ import { CommentService } from '../application/comment.service';
 import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
 import { ExtractUserFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-from-request.decorator';
 import { UserContextDto } from '../../user-accounts/guards/dto/user-context.dto';
+import { UpdateCommentInputDto } from './input-dto/comments.input-dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -36,21 +39,20 @@ export class CommentsController {
         @Param('id') id: string,
         @ExtractUserFromRequest() user: UserContextDto,
     ) {
-        return this.commentService.deleteComment(id);
+        return this.commentService.deleteComment({ id, userId: user.id });
     }
-    //
-    // @Put(':id')
-    // @HttpCode(HttpStatus.NO_CONTENT)
-    // async updatePost(
-    //     @Param('id') id: string,
-    //     @Body() body: UpdatePostInputDto,
-    // ): Promise<void> {
-    //     return this.postsService.updatePost({ ...body, id: id });
-    // }
-    // @Get()
-    // async getAll(
-    //     @Query() query: GetPostsQueryParams,
-    // ): Promise<PaginatedViewDto<PostViewDto[]>> {
-    //     return this.postsQueryRepository.getAll(query);
-    // }
+
+    @Put(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async updatePost(
+        @Param('id') id: string,
+        @Body() body: UpdateCommentInputDto,
+        @ExtractUserFromRequest() user: UserContextDto,
+    ) {
+        return this.commentService.updateComment({
+            id,
+            userId: user.id,
+            content: body.content,
+        });
+    }
 }

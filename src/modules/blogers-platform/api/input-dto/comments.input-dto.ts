@@ -9,3 +9,10 @@ export class CreateCommentInputDto implements CreateCommentDto {
     @Trim()
     content: string;
 }
+
+export class UpdateCommentInputDto implements CreateCommentDto {
+    @IsString()
+    @Length(contentConstraints.minLength, contentConstraints.maxLength)
+    @Trim()
+    content: string;
+}
