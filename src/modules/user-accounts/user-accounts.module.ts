@@ -21,6 +21,7 @@ import { RegistrationEmailResendingUseCase } from './application/use-cases/auth/
 import { NewPasswordUseCase } from './application/use-cases/auth/new-password.use-case';
 import { PasswordRecoveryUseCase } from './application/use-cases/auth/password-recovery.use-case';
 import { JwtStrategy } from './guards/bearer/jwt.strategy';
+import { UsersExternalRepository } from './infastructure/external/users.external-repository';
 
 const usersUseCases = [
     CreateUserUseCase,
@@ -56,7 +57,8 @@ const authUseCases = [
         ...usersUseCases,
         ...authUseCases,
         JwtStrategy,
+        UsersExternalRepository,
     ],
-    exports: [JwtStrategy],
+    exports: [JwtStrategy, UsersExternalRepository],
 })
 export class UserAccountsModule {}

@@ -22,12 +22,20 @@ import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { PaginatedViewDto } from '../../../core/dto/base.paginated.view-dto';
 import { GetPostsQueryParams } from './input-dto/get-posts-query-params.input-dto';
 import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
+import { CreateCommentInputDto } from './input-dto/comments.input-dto';
+import { ExtractUserFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-from-request.decorator';
+import { UserContextDto } from '../../user-accounts/guards/dto/user-context.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateCommentCommand } from '../application/use-cases/comments/create-comment.use-case';
+import { CommentsQueryRepository } from '../infastructure/query/comments.query-repository';
 
 @Controller('posts')
 export class PostsController {
     constructor(
         private postsQueryRepository: PostsQueryRepository,
+        private commentsQueryRepository: CommentsQueryRepository,
         private postsService: PostsService,
+        private commandBus: CommandBus,
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -68,5 +76,31 @@ export class PostsController {
         @Query() query: GetPostsQueryParams,
     ): Promise<PaginatedViewDto<PostViewDto[]>> {
         return this.postsQueryRepository.getAll(query);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiParam({
+        name: 'id',
+        content: { id: { example: '68b930c0b1eea6deab39cb09' } },
+    })
+    @Post(':postId/comments')
+    async createComment(
+        @Param('postId') id: string,
+        @Body() body: CreateCommentInputDto,
+        @ExtractUserFromRequest() user: UserContextDto,
+    ) {
+        const dto = {
+            postId: id,
+            content: body.content,
+            userId: user.id,
+        };
+
+        const commentId = await this.commandBus.execute<
+            CreateCommentCommand,
+            string
+        >(new CreateCommentCommand(dto));
+
+        return this.commentsQueryRepository.getByIdOrNotFoundFail(commentId);
     }
 }

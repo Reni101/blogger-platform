@@ -20,9 +20,6 @@ export class Comment {
     })
     content: string;
 
-    @Prop({ type: String, required: true })
-    shortDescription: string;
-
     @Prop({ type: CommentatorSchema, required: true })
     commentatorInfo: Commentator;
 
