@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ErrorResponseBody } from './error-response-body.type';
+import { DomainExceptionCode } from '../domain-exception-codes';
 
 //https://docs.nestjs.com/exception-filters#exception-filters-1
 //Все ошибки
@@ -34,20 +35,20 @@ export class AllHttpExceptionsFilter implements ExceptionFilter {
 
         if (isProduction) {
             return {
-                // timestamp: new Date().toISOString(),
-                // path: null,
-                // message: 'Some error occurred',
+                timestamp: new Date().toISOString(),
+                path: null,
+                message: 'Some error occurred',
                 errorsMessages: [],
-                // code: DomainExceptionCode.InternalServerError,
+                code: DomainExceptionCode.InternalServerError,
             };
         }
 
         return {
-            // timestamp: new Date().toISOString(),
-            // path: requestUrl,
-            // message,
+            timestamp: new Date().toISOString(),
+            path: requestUrl,
+            message,
             errorsMessages: [],
-            // code: DomainExceptionCode.InternalServerError,
+            code: DomainExceptionCode.InternalServerError,
         };
     }
 }

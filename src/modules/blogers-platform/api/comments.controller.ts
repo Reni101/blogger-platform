@@ -15,13 +15,19 @@ import { CommentService } from '../application/comment.service';
 import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
 import { ExtractUserFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-from-request.decorator';
 import { UserContextDto } from '../../user-accounts/guards/dto/user-context.dto';
-import { UpdateCommentInputDto } from './input-dto/comments.input-dto';
+import {
+    likeStatusCommentInputDto,
+    UpdateCommentInputDto,
+} from './input-dto/comments.input-dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { LikeStatusCommentCommand } from '../application/use-cases/comments/like-status.use-case';
 
 @Controller('comments')
 export class CommentsController {
     constructor(
         private commentsQueryRepository: CommentsQueryRepository,
         private commentService: CommentService,
+        private commandBus: CommandBus,
     ) {}
 
     @ApiParam({ name: 'id' })
@@ -42,6 +48,8 @@ export class CommentsController {
         return this.commentService.deleteComment({ id, userId: user.id });
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Put(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async updatePost(
@@ -54,5 +62,23 @@ export class CommentsController {
             userId: user.id,
             content: body.content,
         });
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @Put(':id/like-status')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async likeStatus(
+        @Param('id') id: string,
+        @Body() body: likeStatusCommentInputDto,
+        @ExtractUserFromRequest() user: UserContextDto,
+    ) {
+        return this.commandBus.execute<LikeStatusCommentCommand, void>(
+            new LikeStatusCommentCommand({
+                status: body.likeStatus,
+                commentId: id,
+                userId: user.id,
+            }),
+        );
     }
 }

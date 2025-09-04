@@ -32,10 +32,45 @@ export class CommentsRepository {
         if (!comment) {
             throw new DomainException({
                 code: DomainExceptionCode.NotFound,
-                message: 'users not found',
+                message: 'comment not found',
             });
         }
 
         return comment;
+    }
+
+    async incrementLike(commentId: string, value: number) {
+        return this.CommentModel.findByIdAndUpdate(
+            { _id: commentId },
+            { $inc: { 'likesInfo.likesCount': value } },
+        );
+    }
+    async incrementDislike(commentId: string, value: number) {
+        return this.CommentModel.findByIdAndUpdate(
+            { _id: commentId },
+            { $inc: { 'likesInfo.dislikesCount': value } },
+        );
+    }
+    async toggleLike(commentId: string) {
+        await this.CommentModel.findByIdAndUpdate(
+            { _id: commentId },
+            {
+                $inc: {
+                    'likesInfo.likesCount': +1,
+                    'likesInfo.dislikesCount': -1,
+                },
+            },
+        );
+    }
+    async toggleDislike(commentId: string) {
+        await this.CommentModel.findByIdAndUpdate(
+            { _id: commentId },
+            {
+                $inc: {
+                    'likesInfo.likesCount': -1,
+                    'likesInfo.dislikesCount': +1,
+                },
+            },
+        );
     }
 }
