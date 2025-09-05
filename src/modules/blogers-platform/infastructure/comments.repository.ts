@@ -7,6 +7,7 @@ import {
 } from '../domain/comment/comment.entity';
 import { DomainException } from '../../../core/exceptions/domain-exceptions';
 import { DomainExceptionCode } from '../../../core/exceptions/domain-exception-codes';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class CommentsRepository {
@@ -15,7 +16,7 @@ export class CommentsRepository {
         private CommentModel: CommentModelType,
     ) {}
 
-    async findById(id: string) {
+    async findById(id: Types.ObjectId) {
         return this.CommentModel.findOne({
             _id: id,
             deletedAt: null,
@@ -26,7 +27,7 @@ export class CommentsRepository {
         await comment.save();
     }
 
-    async findOrNotFoundFail(id: string): Promise<CommentDocument> {
+    async findOrNotFoundFail(id: Types.ObjectId): Promise<CommentDocument> {
         const comment = await this.findById(id);
 
         if (!comment) {
@@ -39,19 +40,19 @@ export class CommentsRepository {
         return comment;
     }
 
-    async incrementLike(commentId: string, value: number) {
+    async incrementLike(commentId: Types.ObjectId, value: number) {
         return this.CommentModel.findByIdAndUpdate(
             { _id: commentId },
             { $inc: { 'likesInfo.likesCount': value } },
         );
     }
-    async incrementDislike(commentId: string, value: number) {
+    async incrementDislike(commentId: Types.ObjectId, value: number) {
         return this.CommentModel.findByIdAndUpdate(
             { _id: commentId },
             { $inc: { 'likesInfo.dislikesCount': value } },
         );
     }
-    async toggleLike(commentId: string) {
+    async toggleLike(commentId: Types.ObjectId) {
         await this.CommentModel.findByIdAndUpdate(
             { _id: commentId },
             {
@@ -62,7 +63,7 @@ export class CommentsRepository {
             },
         );
     }
-    async toggleDislike(commentId: string) {
+    async toggleDislike(commentId: Types.ObjectId) {
         await this.CommentModel.findByIdAndUpdate(
             { _id: commentId },
             {

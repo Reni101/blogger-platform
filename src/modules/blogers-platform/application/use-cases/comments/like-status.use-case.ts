@@ -8,6 +8,7 @@ import {
     LikeCommentModelType,
 } from '../../../domain/comment/likes-comment.entity';
 import { LikeStatusEnum } from '../../../domain/const/LikeStatusEnum';
+import { Types } from 'mongoose';
 
 export class LikeStatusCommentCommand {
     constructor(public dto: CreateLikeCommentDomainDto) {}
@@ -31,7 +32,8 @@ export class LikeStatusCommentUseCase
             { userId: userId, commentId },
         );
         if (!like) {
-            await this.createLike(dto);
+            const like = this.likeCommentModelType.createInstance(dto);
+            await this.likesCommentRepository.save(like);
             await this.incrementData({ status, commentId, value: 1 });
             return;
         }
@@ -54,13 +56,9 @@ export class LikeStatusCommentUseCase
         return;
     }
 
-    private async createLike(dto: CreateLikeCommentDomainDto) {
-        const like = this.likeCommentModelType.createInstance(dto);
-        await this.likesCommentRepository.save(like);
-    }
     private async incrementData(dto: {
         status: LikeStatusEnum;
-        commentId: string;
+        commentId: Types.ObjectId;
         value: number;
     }) {
         const { commentId, status, value } = dto;

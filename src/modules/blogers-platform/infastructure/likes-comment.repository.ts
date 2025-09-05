@@ -5,6 +5,7 @@ import {
     LikeCommentDocument,
     LikeCommentModelType,
 } from '../domain/comment/likes-comment.entity';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class LikesCommentRepository {
@@ -13,7 +14,10 @@ export class LikesCommentRepository {
         private likeCommentModelType: LikeCommentModelType,
     ) {}
 
-    async findByCommentIdAndUserId(dto: { commentId: string; userId: string }) {
+    async findByCommentIdAndUserId(dto: {
+        commentId: Types.ObjectId;
+        userId: Types.ObjectId;
+    }) {
         return this.likeCommentModelType.findOne({
             userId: dto.userId,
             commentId: dto.commentId,

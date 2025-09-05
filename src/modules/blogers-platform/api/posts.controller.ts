@@ -81,20 +81,21 @@ export class PostsController {
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     @ApiParam({
-        name: 'id',
-        content: { id: { example: '68b930c0b1eea6deab39cb09' } },
+        name: 'postId',
+        content: {
+            postId: {
+                example: '68b930c0b1eea6deab39cb09',
+                schema: { type: 'string' },
+            },
+        },
     })
     @Post(':postId/comments')
     async createComment(
-        @Param('postId') id: string,
+        @Param('postId') postId: string,
         @Body() body: CreateCommentInputDto,
         @ExtractUserFromRequest() user: UserContextDto,
     ) {
-        const dto = {
-            postId: id,
-            content: body.content,
-            userId: user.id,
-        };
+        const dto = { postId: postId, content: body.content, userId: user.id };
 
         const commentId = await this.commandBus.execute<
             CreateCommentCommand,

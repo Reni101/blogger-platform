@@ -6,6 +6,7 @@ import {
     CommentModelType,
 } from '../../../domain/comment/comment.entity';
 import { CommentsRepository } from '../../../infastructure/comments.repository';
+import { Types } from 'mongoose';
 
 class CreateCommentDto {
     postId: string;
@@ -34,9 +35,10 @@ export class CreateCommentUseCase
         );
 
         const comment = this.commentModel.createInstance({
-            userId: user.id,
+            userId: user._id,
             content: dto.content,
             userLogin: user.login,
+            postId: new Types.ObjectId(dto.userId),
         });
 
         await this.commentsRepository.save(comment);

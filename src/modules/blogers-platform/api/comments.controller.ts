@@ -9,8 +9,7 @@ import {
     Put,
     UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
-import { CommentsQueryRepository } from '../infastructure/query/comments.query-repository';
+import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { CommentService } from '../application/comment.service';
 import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
 import { ExtractUserFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-from-request.decorator';
@@ -19,21 +18,31 @@ import {
     likeStatusCommentInputDto,
     UpdateCommentInputDto,
 } from './input-dto/comments.input-dto';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { LikeStatusCommentCommand } from '../application/use-cases/comments/like-status.use-case';
+import { JwtOptionalAuthGuard } from '../../user-accounts/guards/bearer/jwt-optional-auth.guard';
+import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-if-exists-from-request.decorator';
+import { Types } from 'mongoose';
+import { GetCommentQuery } from '../application/queries/get-comment.query';
 
 @Controller('comments')
 export class CommentsController {
     constructor(
-        private commentsQueryRepository: CommentsQueryRepository,
         private commentService: CommentService,
         private commandBus: CommandBus,
+        private readonly queryBus: QueryBus,
     ) {}
 
-    @ApiParam({ name: 'id' })
-    @Get(':id')
-    async getById(@Param('id') id: string) {
-        return this.commentsQueryRepository.getByIdOrNotFoundFail(id);
+    @ApiOperation({ summary: 'if there is a token it will return the status' })
+    @Get(':commentId')
+    @UseGuards(JwtOptionalAuthGuard)
+    async getById(
+        @Param('commentId') commentId: string,
+        @ExtractUserIfExistsFromRequest() user: UserContextDto | null,
+    ) {
+        return this.queryBus.execute(
+            new GetCommentQuery({ commentId, userId: user?.id }),
+        );
     }
 
     @UseGuards(JwtAuthGuard)
@@ -53,12 +62,12 @@ export class CommentsController {
     @Put(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async updatePost(
-        @Param('id') id: string,
+        @Param('commentId') commentId: string,
         @Body() body: UpdateCommentInputDto,
         @ExtractUserFromRequest() user: UserContextDto,
     ) {
         return this.commentService.updateComment({
-            id,
+            commentId,
             userId: user.id,
             content: body.content,
         });
@@ -76,8 +85,8 @@ export class CommentsController {
         return this.commandBus.execute<LikeStatusCommentCommand, void>(
             new LikeStatusCommentCommand({
                 status: body.likeStatus,
-                commentId: id,
-                userId: user.id,
+                commentId: new Types.ObjectId(id),
+                userId: new Types.ObjectId(user.id),
             }),
         );
     }

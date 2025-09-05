@@ -1,16 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { LikeStatusEnum } from '../const/LikeStatusEnum';
-import { HydratedDocument, Model } from 'mongoose';
+import { HydratedDocument, Model, Types } from 'mongoose';
 import { CreateLikeCommentDomainDto } from '../dto/create-like-comment.domain.dto';
 
 @Schema({ timestamps: true })
 export class LikeComment {
     @Prop({ enum: LikeStatusEnum, required: true })
     status: LikeStatusEnum;
-    @Prop({ type: String, required: true })
-    userId: string;
-    @Prop({ type: String, required: true })
-    commentId: string;
+    @Prop({ type: Types.ObjectId, required: true })
+    userId: Types.ObjectId;
+    @Prop({ type: Types.ObjectId, required: true })
+    commentId: Types.ObjectId;
 
     static createInstance(
         dto: CreateLikeCommentDomainDto,

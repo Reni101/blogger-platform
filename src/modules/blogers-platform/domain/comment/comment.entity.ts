@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Model } from 'mongoose';
+import { HydratedDocument, Model, Types } from 'mongoose';
 import { Commentator, CommentatorSchema } from './commentator.schema';
 import { LikesInfo, LikesInfoSchema } from './likes-Info.schema';
 import { CreateCommentDomainDto } from '../dto/create-comment.domain.dto';
@@ -20,6 +20,9 @@ export class Comment {
     })
     content: string;
 
+    @Prop({ type: Types.ObjectId, required: true })
+    postId: Types.ObjectId;
+
     @Prop({ type: CommentatorSchema, required: true })
     commentatorInfo: Commentator;
 
@@ -39,6 +42,7 @@ export class Comment {
             userId: dto.userId,
             userLogin: dto.userLogin,
         };
+        comment.postId = dto.postId;
 
         comment.likesInfo = {
             dislikesCount: 0,

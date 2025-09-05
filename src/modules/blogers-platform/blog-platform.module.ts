@@ -23,8 +23,10 @@ import {
     LikeCommentSchema,
 } from './domain/comment/likes-comment.entity';
 import { LikesCommentRepository } from './infastructure/likes-comment.repository';
+import { GetCommentQueryHandler } from './application/queries/get-comment.query';
 
 const useCases = [CreateCommentUseCase, LikeStatusCommentUseCase];
+const queries = [GetCommentQueryHandler];
 
 @Module({
     imports: [
@@ -51,6 +53,7 @@ const useCases = [CreateCommentUseCase, LikeStatusCommentUseCase];
         CommentsQueryRepository,
         LikesCommentRepository,
         ...useCases,
+        ...queries,
     ],
 })
 export class BlogPlatformModule {}
