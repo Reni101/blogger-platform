@@ -6,7 +6,7 @@ import {
     CommentModelType,
 } from '../../../domain/comment/comment.entity';
 import { CommentsRepository } from '../../../infastructure/comments.repository';
-import { Types } from 'mongoose';
+import { PostsRepository } from '../../../infastructure/posts.repository';
 
 class CreateCommentDto {
     postId: string;
@@ -27,18 +27,20 @@ export class CreateCommentUseCase
         @InjectModel(Comment.name)
         private commentModel: CommentModelType,
         private commentsRepository: CommentsRepository,
+        private postsRepository: PostsRepository,
     ) {}
 
     async execute({ dto }: CreateCommentCommand) {
         const user = await this.usersExternalRepository.findOrNotFoundFail(
             dto.userId,
         );
+        const post = await this.postsRepository.findOrNotFoundFail(dto.userId);
 
         const comment = this.commentModel.createInstance({
             userId: user._id,
             content: dto.content,
             userLogin: user.login,
-            postId: new Types.ObjectId(dto.userId),
+            postId: post._id,
         });
 
         await this.commentsRepository.save(comment);
