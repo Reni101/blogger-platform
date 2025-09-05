@@ -6,6 +6,7 @@ import { GetCommentsQueryParams } from '../../api/input-dto/get-comments-query-p
 import { PaginatedViewDto } from '../../../../core/dto/base.paginated.view-dto';
 import { Types } from 'mongoose';
 import { LikeStatusEnum } from '../../domain/const/LikeStatusEnum';
+import { PostsRepository } from '../../infastructure/posts.repository';
 
 export class GetCommentsByPostIdQuery {
     constructor(
@@ -28,9 +29,12 @@ export class GetCommentsByPostIdQueryHandler
     constructor(
         private commentsQueryRepository: CommentsQueryRepository,
         private likesCommentRepository: LikesCommentRepository,
+        private postsRepository: PostsRepository,
     ) {}
 
     async execute({ dto }: GetCommentsByPostIdQuery) {
+        await this.postsRepository.findOrNotFoundFail(dto.postId);
+
         const comments = await this.commentsQueryRepository.getAll(dto.query);
         if (dto.userId) {
             for (const comment of comments.items) {
