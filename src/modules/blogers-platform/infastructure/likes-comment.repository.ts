@@ -27,17 +27,4 @@ export class LikesCommentRepository {
     async save(comment: LikeCommentDocument) {
         await comment.save();
     }
-
-    // async findOrNotFoundFail(id: string): Promise<LikeCommentDocument> {
-    //     const comment = await this.findById(id);
-    //
-    //     if (!comment) {
-    //         throw new DomainException({
-    //             code: DomainExceptionCode.NotFound,
-    //             message: ' not found',
-    //         });
-    //     }
-    //
-    //     return comment;
-    // }
 }

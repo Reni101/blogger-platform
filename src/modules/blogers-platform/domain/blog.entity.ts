@@ -3,12 +3,31 @@ import { HydratedDocument, Model } from 'mongoose';
 import { CreateBlogDomainDto } from './dto/create-blog.domain.dto';
 import { UpdateBlogDto } from '../dto/blogs/update-blog.dto';
 
+export const nameConstraints = {
+    minLength: 0,
+    maxLength: 15,
+};
+export const descriptionConstraints = {
+    minLength: 0,
+    maxLength: 300,
+};
+
 @Schema({ timestamps: true })
 export class Blog {
-    @Prop({ type: String, required: true })
+    @Prop({
+        type: String,
+        required: true,
+        max: nameConstraints.maxLength,
+        min: nameConstraints.minLength,
+    })
     name: string;
 
-    @Prop({ type: String, required: true })
+    @Prop({
+        type: String,
+        required: true,
+        max: descriptionConstraints.maxLength,
+        min: descriptionConstraints.minLength,
+    })
     description: string;
 
     @Prop({ type: String, required: true })
