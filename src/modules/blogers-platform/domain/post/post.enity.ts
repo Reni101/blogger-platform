@@ -11,7 +11,7 @@ export const titleConstraints = {
 
 export const shortDescriptionConstraints = {
     minLength: 0,
-    maxLength: 300,
+    maxLength: 100,
 };
 export const contentDescriptionConstraints = {
     minLength: 0,
