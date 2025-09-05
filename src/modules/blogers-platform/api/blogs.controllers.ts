@@ -91,7 +91,7 @@ export class BlogsControllers {
 
     @ApiParam({ name: 'blogId' })
     @Get(':blogId/posts')
-    async getPostByBlogId(
+    async getPostsByBlogId(
         @Query() query: GetPostsQueryParams,
         @Param('blogId') blogId: string,
     ) {

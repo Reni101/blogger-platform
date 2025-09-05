@@ -24,9 +24,10 @@ import {
 } from './domain/comment/likes-comment.entity';
 import { LikesCommentRepository } from './infastructure/likes-comment.repository';
 import { GetCommentQueryHandler } from './application/queries/get-comment.query';
+import { GetCommentsByPostIdQueryHandler } from './application/queries/get-comments-by-postId.query';
 
 const useCases = [CreateCommentUseCase, LikeStatusCommentUseCase];
-const queries = [GetCommentQueryHandler];
+const queries = [GetCommentQueryHandler, GetCommentsByPostIdQueryHandler];
 
 @Module({
     imports: [

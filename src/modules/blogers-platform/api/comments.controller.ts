@@ -24,13 +24,14 @@ import { JwtOptionalAuthGuard } from '../../user-accounts/guards/bearer/jwt-opti
 import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-if-exists-from-request.decorator';
 import { Types } from 'mongoose';
 import { GetCommentQuery } from '../application/queries/get-comment.query';
+import { CommentViewDto } from './view-dto/comments.view-dto';
 
 @Controller('comments')
 export class CommentsController {
     constructor(
         private commentService: CommentService,
         private commandBus: CommandBus,
-        private readonly queryBus: QueryBus,
+        private queryBus: QueryBus,
     ) {}
 
     @ApiOperation({ summary: 'if there is a token it will return the status' })
@@ -40,7 +41,7 @@ export class CommentsController {
         @Param('commentId') commentId: string,
         @ExtractUserIfExistsFromRequest() user: UserContextDto | null,
     ) {
-        return this.queryBus.execute(
+        return this.queryBus.execute<GetCommentQuery, CommentViewDto>(
             new GetCommentQuery({ commentId, userId: user?.id }),
         );
     }
