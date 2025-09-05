@@ -123,7 +123,6 @@ export class PostsController {
     })
     @ApiOperation({ summary: 'if there is a token it will return the status' })
     @UseGuards(JwtOptionalAuthGuard)
-    @ApiBearerAuth()
     async getCommentsByPostId(
         @Query() query: GetCommentsQueryParams,
         @Param('postId') postId: string,
