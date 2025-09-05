@@ -37,7 +37,7 @@ export class GetCommentsByPostIdQueryHandler
 
         const comments = await this.commentsQueryRepository.getAll(
             dto.query,
-            dto.userId,
+            dto.postId,
         );
         if (dto.userId) {
             for (const comment of comments.items) {
