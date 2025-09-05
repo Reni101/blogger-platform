@@ -4,15 +4,44 @@ import { PostLike, PostLikeSchema } from './post-like.schema';
 import { CreatePostDomainDto } from '../dto/create-post.domain.dto';
 import { UpdatePostDto } from '../../dto/posts/update-post.dto';
 
+export const titleConstraints = {
+    minLength: 0,
+    maxLength: 30,
+};
+
+export const shortDescriptionConstraints = {
+    minLength: 0,
+    maxLength: 300,
+};
+export const contentDescriptionConstraints = {
+    minLength: 0,
+    maxLength: 1000,
+};
+
 @Schema({ timestamps: true })
 export class Post {
-    @Prop({ type: String, required: true })
+    @Prop({
+        type: String,
+        required: true,
+        min: titleConstraints.minLength,
+        max: titleConstraints.maxLength,
+    })
     title: string;
 
-    @Prop({ type: String, required: true })
+    @Prop({
+        type: String,
+        required: true,
+        min: shortDescriptionConstraints.minLength,
+        max: shortDescriptionConstraints.maxLength,
+    })
     shortDescription: string;
 
-    @Prop({ type: String, required: true })
+    @Prop({
+        type: String,
+        required: true,
+        min: contentDescriptionConstraints.minLength,
+        max: contentDescriptionConstraints.maxLength,
+    })
     content: string;
 
     @Prop({ type: String, required: true })
