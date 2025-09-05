@@ -12,7 +12,6 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CqrsModule } from '@nestjs/cqrs';
-import { AppController } from './app.controller';
 
 @Module({
     imports: [
@@ -29,7 +28,7 @@ import { AppController } from './app.controller';
         TestingModule,
         NotificationsModule,
     ],
-    controllers: [AppController],
+    controllers: [],
     providers: [
         {
             provide: APP_FILTER,

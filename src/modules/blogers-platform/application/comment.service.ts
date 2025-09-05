@@ -27,7 +27,6 @@ export class CommentService {
         const comment = await this.commentsRepository.findOrNotFoundFail(
             new Types.ObjectId(dto.commentId),
         );
-
         const commentOwnerId = comment.commentatorInfo.userId.toString();
         this.validateCommentOwner(commentOwnerId, dto.userId);
 

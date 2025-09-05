@@ -60,9 +60,9 @@ export class CommentsController {
 
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
-    @Put(':id')
+    @Put(':commentId')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async updatePost(
+    async updateComment(
         @Param('commentId') commentId: string,
         @Body() body: UpdateCommentInputDto,
         @ExtractUserFromRequest() user: UserContextDto,
