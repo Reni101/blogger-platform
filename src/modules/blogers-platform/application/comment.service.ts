@@ -12,7 +12,6 @@ export class CommentService {
         const comment = await this.commentsRepository.findOrNotFoundFail(
             new Types.ObjectId(dto.id),
         );
-
         const commentOwnerId = comment.commentatorInfo.userId.toString();
         this.validateCommentOwner(commentOwnerId, dto.userId);
 
@@ -38,7 +37,7 @@ export class CommentService {
 
     private validateCommentOwner(commentOwnerId: string, userId: string) {
         if (commentOwnerId !== userId) {
-            new DomainException({
+            throw new DomainException({
                 code: DomainExceptionCode.Forbidden,
                 message: 'The comment does not belong to the user',
             });
