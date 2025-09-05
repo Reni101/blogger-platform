@@ -7,19 +7,18 @@ import {
 } from '../../domain/user.entity';
 
 export class CreateUserInputDto implements CreateUserDto {
+    @Trim()
     @IsString()
     @Length(loginConstraints.minLength, loginConstraints.maxLength)
-    @Trim()
     login: string;
 
+    @Trim()
     @IsString()
     @Length(passwordConstraints.minLength, passwordConstraints.maxLength)
-    @Trim()
     password: string;
 
+    @Trim()
     @IsString()
     @IsEmail()
-    @Trim()
-    // @Matches(emailConstraints.match)
     email: string;
 }

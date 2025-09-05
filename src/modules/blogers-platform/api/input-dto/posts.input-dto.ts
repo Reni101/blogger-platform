@@ -8,55 +8,55 @@ import {
 } from '../../domain/post/post.enity';
 
 export class CreatePostInputDto implements CreatePostDto {
+    @Trim()
     @IsString()
     @Length(titleConstraints.minLength, titleConstraints.maxLength)
-    @Trim()
     title: string;
 
+    @Trim()
     @IsString()
     @Length(
         shortDescriptionConstraints.minLength,
         shortDescriptionConstraints.maxLength,
     )
-    @Trim()
     shortDescription: string;
 
+    @Trim()
     @IsString()
     @Length(
         contentDescriptionConstraints.minLength,
         contentDescriptionConstraints.maxLength,
     )
-    @Trim()
     content: string;
 
-    @IsString()
     @Trim()
+    @IsString()
     blogId: string;
 }
 
 export class UpdatePostInputDto {
+    @Trim()
     @IsString()
     @Length(titleConstraints.minLength, titleConstraints.maxLength)
-    @Trim()
     title: string;
 
+    @Trim()
     @IsString()
     @Length(
         shortDescriptionConstraints.minLength,
         shortDescriptionConstraints.maxLength,
     )
-    @Trim()
     shortDescription: string;
 
+    @Trim()
     @IsString()
     @Length(
         contentDescriptionConstraints.minLength,
         contentDescriptionConstraints.maxLength,
     )
-    @Trim()
     content: string;
 
-    @IsString()
     @Trim()
+    @IsString()
     blogId: string;
 }

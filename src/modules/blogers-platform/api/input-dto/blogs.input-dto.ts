@@ -12,57 +12,57 @@ import {
 } from '../../domain/post/post.enity';
 
 export class CreateBlogInputDto implements CreateBlogDto {
+    @Trim()
     @IsString()
     @Length(nameConstraints.minLength, nameConstraints.maxLength)
-    @Trim()
     name: string;
 
+    @Trim()
     @IsString()
     @Length(descriptionConstraints.minLength, descriptionConstraints.maxLength)
-    @Trim()
     description: string;
 
+    @Trim()
     @IsString()
     @IsUrl()
-    @Trim()
     websiteUrl: string;
 }
 
 export class UpdateBlogInputDto {
+    @Trim()
     @IsString()
     @Length(nameConstraints.minLength, nameConstraints.maxLength)
-    @Trim()
     name: string;
 
+    @Trim()
     @IsString()
     @Length(descriptionConstraints.minLength, descriptionConstraints.maxLength)
-    @Trim()
     description: string;
 
+    @Trim()
     @IsString()
     @IsUrl()
-    @Trim()
     websiteUrl: string;
 }
 export class CreatePostByBlogIdInputDto {
+    @Trim()
     @IsString()
     @Length(titleConstraints.minLength, titleConstraints.maxLength)
-    @Trim()
     title: string;
 
+    @Trim()
     @IsString()
     @Length(
         shortDescriptionConstraints.minLength,
         shortDescriptionConstraints.maxLength,
     )
-    @Trim()
     shortDescription: string;
 
+    @Trim()
     @IsString()
     @Length(
         contentDescriptionConstraints.minLength,
         contentDescriptionConstraints.maxLength,
     )
-    @Trim()
     content: string;
 }

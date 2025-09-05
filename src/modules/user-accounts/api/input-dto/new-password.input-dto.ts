@@ -3,13 +3,13 @@ import { passwordConstraints } from '../../domain/user.entity';
 import { Trim } from '../../../../core/decorators/transform/trim';
 
 export class NewPasswordInputDto {
+    @Trim()
     @IsString()
     @Length(passwordConstraints.minLength, passwordConstraints.maxLength)
-    @Trim()
     newPassword: string;
 
+    @Trim()
     @IsString()
     @IsUUID()
-    @Trim()
     recoveryCode: string;
 }

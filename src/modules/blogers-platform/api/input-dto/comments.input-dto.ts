@@ -5,16 +5,16 @@ import { contentConstraints } from '../../domain/comment/comment.entity';
 import { LikeStatusEnum } from '../../domain/const/LikeStatusEnum';
 
 export class CreateCommentInputDto implements CreateCommentDto {
+    @Trim()
     @IsString()
     @Length(contentConstraints.minLength, contentConstraints.maxLength)
-    @Trim()
     content: string;
 }
 
 export class UpdateCommentInputDto implements CreateCommentDto {
+    @Trim()
     @IsString()
     @Length(contentConstraints.minLength, contentConstraints.maxLength)
-    @Trim()
     content: string;
 }
 
