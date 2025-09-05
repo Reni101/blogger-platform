@@ -35,7 +35,10 @@ export class GetCommentsByPostIdQueryHandler
     async execute({ dto }: GetCommentsByPostIdQuery) {
         await this.postsRepository.findOrNotFoundFail(dto.postId);
 
-        const comments = await this.commentsQueryRepository.getAll(dto.query);
+        const comments = await this.commentsQueryRepository.getAll(
+            dto.query,
+            dto.userId,
+        );
         if (dto.userId) {
             for (const comment of comments.items) {
                 const likeComment =
