@@ -11,7 +11,7 @@ import {
     Query,
     UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiParam } from '@nestjs/swagger';
 import { BlogViewDto } from './view-dto/blogs.view-dto';
 import { BlogsQueryRepository } from '../infastructure/query/blogs.query-repository';
 import {
@@ -25,7 +25,7 @@ import { GetBlogsQueryParams } from './input-dto/get-blogs-query-params.input-dt
 import { PostsQueryRepository } from '../infastructure/query/posts.query-repository';
 import { PostsService } from '../application/posts.service';
 import { GetPostsQueryParams } from './input-dto/get-posts-query-params.input-dto';
-import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
+import { BasicAuthGuard } from '../../user-accounts/guards/basic/bacis-auth.guard';
 
 @Controller('blogs')
 export class BlogsControllers {
@@ -42,16 +42,16 @@ export class BlogsControllers {
         return this.blogsQueryRepository.getByIdOrNotFoundFail(id);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
+    @UseGuards(BasicAuthGuard)
+    @ApiBasicAuth()
     @Post()
     async createBlog(@Body() body: CreateBlogInputDto): Promise<BlogViewDto> {
         const blogId = await this.blogsService.createBlog(body);
         return this.blogsQueryRepository.getByIdOrNotFoundFail(blogId);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
+    @UseGuards(BasicAuthGuard)
+    @ApiBasicAuth()
     @ApiParam({ name: 'id' })
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
@@ -59,8 +59,8 @@ export class BlogsControllers {
         return this.blogsService.deleteBlog(id);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
+    @UseGuards(BasicAuthGuard)
+    @ApiBasicAuth()
     @Put(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async updateBlog(
@@ -77,8 +77,8 @@ export class BlogsControllers {
         return this.blogsQueryRepository.getAll(query);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
+    @UseGuards(BasicAuthGuard)
+    @ApiBasicAuth()
     @ApiParam({ name: 'blogId' })
     @Post(':blogId/posts')
     async createPostByBlogId(
@@ -89,6 +89,8 @@ export class BlogsControllers {
         return this.postsQueryRepository.getByIdOrNotFoundFail(postId);
     }
 
+    @UseGuards(BasicAuthGuard)
+    @ApiBasicAuth()
     @ApiParam({ name: 'blogId' })
     @Get(':blogId/posts')
     async getPostsByBlogId(

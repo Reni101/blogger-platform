@@ -18,7 +18,12 @@ import {
 import { PostsService } from '../application/posts.service';
 import { PostViewDto } from './view-dto/posts.view-dto';
 import { PostsQueryRepository } from '../infastructure/query/posts.query-repository';
-import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
+import {
+    ApiBasicAuth,
+    ApiBearerAuth,
+    ApiOperation,
+    ApiParam,
+} from '@nestjs/swagger';
 import { PaginatedViewDto } from '../../../core/dto/base.paginated.view-dto';
 import { GetPostsQueryParams } from './input-dto/get-posts-query-params.input-dto';
 import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
@@ -33,6 +38,7 @@ import { GetCommentsQueryParams } from './input-dto/get-comments-query-params.in
 import { CommentViewDto } from './view-dto/comments.view-dto';
 import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-if-exists-from-request.decorator';
 import { GetCommentsByPostIdQuery } from '../application/queries/get-comments-by-postId.query';
+import { BasicAuthGuard } from '../../user-accounts/guards/basic/bacis-auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -44,8 +50,8 @@ export class PostsController {
         private queryBus: QueryBus,
     ) {}
 
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
+    @UseGuards(BasicAuthGuard)
+    @ApiBasicAuth()
     @Post()
     async createPost(@Body() body: CreatePostInputDto): Promise<PostViewDto> {
         const postId = await this.postsService.createPost(body);
@@ -58,8 +64,8 @@ export class PostsController {
         return this.postsQueryRepository.getByIdOrNotFoundFail(id);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
+    @UseGuards(BasicAuthGuard)
+    @ApiBasicAuth()
     @ApiParam({ name: 'id' })
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
@@ -67,8 +73,8 @@ export class PostsController {
         return this.postsService.deletePost(id);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
+    @UseGuards(BasicAuthGuard)
+    @ApiBasicAuth()
     @Put(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async updatePost(
