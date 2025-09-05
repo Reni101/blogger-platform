@@ -108,7 +108,6 @@ export class PostsController {
         @ExtractUserFromRequest() user: UserContextDto,
     ) {
         const dto = { postId: postId, content: body.content, userId: user.id };
-
         const commentId = await this.commandBus.execute<
             CreateCommentCommand,
             string

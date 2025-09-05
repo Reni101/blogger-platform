@@ -34,7 +34,7 @@ export class CreateCommentUseCase
         const user = await this.usersExternalRepository.findOrNotFoundFail(
             dto.userId,
         );
-        const post = await this.postsRepository.findOrNotFoundFail(dto.userId);
+        const post = await this.postsRepository.findOrNotFoundFail(dto.postId);
 
         const comment = this.commentModel.createInstance({
             userId: user._id,
