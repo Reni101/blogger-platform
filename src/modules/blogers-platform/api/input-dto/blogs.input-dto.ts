@@ -1,5 +1,5 @@
 import { CreateBlogDto } from '../../dto/blogs/create-blog.dto';
-import { IsString, IsUrl, Length } from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl, Length } from 'class-validator';
 import { Trim } from '../../../../core/decorators/transform/trim';
 import {
     descriptionConstraints,
@@ -24,6 +24,7 @@ export class CreateBlogInputDto implements CreateBlogDto {
 
     @Trim()
     @IsString()
+    @IsNotEmpty()
     @IsUrl()
     websiteUrl: string;
 }
@@ -41,6 +42,7 @@ export class UpdateBlogInputDto {
 
     @Trim()
     @IsString()
+    @IsNotEmpty()
     @IsUrl()
     websiteUrl: string;
 }
