@@ -12,8 +12,8 @@ import {
 } from '../../domain/post/post.enity';
 
 export class CreateBlogInputDto implements CreateBlogDto {
-    @Trim()
     @IsString()
+    @Trim()
     @Length(nameConstraints.minLength, nameConstraints.maxLength)
     name: string;
 

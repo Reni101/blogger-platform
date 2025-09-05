@@ -5,16 +5,16 @@ import { CreatePostDomainDto } from '../dto/create-post.domain.dto';
 import { UpdatePostDto } from '../../dto/posts/update-post.dto';
 
 export const titleConstraints = {
-    minLength: 0,
+    minLength: 1,
     maxLength: 30,
 };
 
 export const shortDescriptionConstraints = {
-    minLength: 0,
+    minLength: 1,
     maxLength: 100,
 };
 export const contentDescriptionConstraints = {
-    minLength: 0,
+    minLength: 1,
     maxLength: 1000,
 };
 

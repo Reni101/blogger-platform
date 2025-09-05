@@ -4,11 +4,11 @@ import { CreateBlogDomainDto } from './dto/create-blog.domain.dto';
 import { UpdateBlogDto } from '../dto/blogs/update-blog.dto';
 
 export const nameConstraints = {
-    minLength: 0,
+    minLength: 1,
     maxLength: 15,
 };
 export const descriptionConstraints = {
-    minLength: 0,
+    minLength: 1,
     maxLength: 300,
 };
 
