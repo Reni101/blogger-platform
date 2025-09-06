@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { PostLike, PostLikeSchema } from './post-like.schema';
+import { ExtendedLikesInfo, ExtendLikesSchema } from './extend-likes.schema';
 import { CreatePostDomainDto } from '../dto/create-post.domain.dto';
 import { UpdatePostDto } from '../../dto/posts/update-post.dto';
 
@@ -50,8 +50,8 @@ export class Post {
     @Prop({ type: String, required: true })
     blogName: string;
 
-    @Prop({ type: PostLikeSchema, required: true })
-    extendedLikesInfo: PostLike;
+    @Prop({ type: ExtendLikesSchema, required: true })
+    extendedLikesInfo: ExtendedLikesInfo;
 
     createdAt: Date;
     updatedAt: Date;

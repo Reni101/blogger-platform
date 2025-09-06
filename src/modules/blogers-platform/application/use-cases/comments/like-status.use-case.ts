@@ -8,7 +8,6 @@ import {
     LikeCommentModelType,
 } from '../../../domain/comment/likes-comment.entity';
 import { LikeStatusEnum } from '../../../domain/const/LikeStatusEnum';
-import { Types } from 'mongoose';
 
 export class LikeStatusCommentCommand {
     constructor(public dto: CreateLikeCommentDomainDto) {}
@@ -26,7 +25,8 @@ export class LikeStatusCommentUseCase
 
     async execute({ dto }: LikeStatusCommentCommand) {
         const { commentId, status, userId } = dto;
-        await this.commentsRepository.findOrNotFoundFail(commentId);
+        const comment =
+            await this.commentsRepository.findOrNotFoundFail(commentId);
 
         const like = await this.likesCommentRepository.findByCommentIdAndUserId(
             { userId: userId, commentId },
@@ -34,38 +34,24 @@ export class LikeStatusCommentUseCase
         if (!like) {
             const like = this.likeCommentModelType.createInstance(dto);
             await this.likesCommentRepository.save(like);
-            await this.incrementData({ status, commentId, value: 1 });
+            comment.incrementLikeCount(status, 1);
+            await this.commentsRepository.save(comment);
             return;
         }
 
         if (like && status === LikeStatusEnum.None) {
-            await this.incrementData({ status, commentId, value: -1 });
+            comment.incrementLikeCount(like.status, -1);
+            await this.commentsRepository.save(comment);
             await like.deleteOne();
-            return;
         }
         if (like.status !== dto.status) {
             like.updateLike(status);
             await this.likesCommentRepository.save(like);
-            if (dto.status === LikeStatusEnum.Like) {
-                await this.commentsRepository.toggleLike(commentId);
-            } else {
-                await this.commentsRepository.toggleDislike(commentId);
-            }
+            comment.toggleCount(status);
+            await this.commentsRepository.save(comment);
+            return;
         }
 
         return;
-    }
-
-    private async incrementData(dto: {
-        status: LikeStatusEnum;
-        commentId: Types.ObjectId;
-        value: number;
-    }) {
-        const { commentId, status, value } = dto;
-        if (status === LikeStatusEnum.Like) {
-            await this.commentsRepository.incrementLike(commentId, value);
-        } else {
-            await this.commentsRepository.incrementDislike(commentId, value);
-        }
     }
 }

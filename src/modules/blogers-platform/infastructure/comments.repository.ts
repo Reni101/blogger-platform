@@ -40,38 +40,38 @@ export class CommentsRepository {
         return comment;
     }
 
-    async incrementLike(commentId: Types.ObjectId, value: number) {
-        return this.CommentModel.findByIdAndUpdate(
-            { _id: commentId },
-            { $inc: { 'likesInfo.likesCount': value } },
-        );
-    }
-    async incrementDislike(commentId: Types.ObjectId, value: number) {
-        return this.CommentModel.findByIdAndUpdate(
-            { _id: commentId },
-            { $inc: { 'likesInfo.dislikesCount': value } },
-        );
-    }
-    async toggleLike(commentId: Types.ObjectId) {
-        await this.CommentModel.findByIdAndUpdate(
-            { _id: commentId },
-            {
-                $inc: {
-                    'likesInfo.likesCount': +1,
-                    'likesInfo.dislikesCount': -1,
-                },
-            },
-        );
-    }
-    async toggleDislike(commentId: Types.ObjectId) {
-        await this.CommentModel.findByIdAndUpdate(
-            { _id: commentId },
-            {
-                $inc: {
-                    'likesInfo.likesCount': -1,
-                    'likesInfo.dislikesCount': +1,
-                },
-            },
-        );
-    }
+    // async incrementLike(commentId: Types.ObjectId, value: number) {
+    //     return this.CommentModel.findByIdAndUpdate(
+    //         { _id: commentId },
+    //         { $inc: { 'likesInfo.likesCount': value } },
+    //     );
+    // }
+    // async incrementDislike(commentId: Types.ObjectId, value: number) {
+    //     return this.CommentModel.findByIdAndUpdate(
+    //         { _id: commentId },
+    //         { $inc: { 'likesInfo.dislikesCount': value } },
+    //     );
+    // }
+    // async toggleLike(commentId: Types.ObjectId) {
+    //     await this.CommentModel.findByIdAndUpdate(
+    //         { _id: commentId },
+    //         {
+    //             $inc: {
+    //                 'likesInfo.likesCount': +1,
+    //                 'likesInfo.dislikesCount': -1,
+    //             },
+    //         },
+    //     );
+    // }
+    // async toggleDislike(commentId: Types.ObjectId) {
+    //     await this.CommentModel.findByIdAndUpdate(
+    //         { _id: commentId },
+    //         {
+    //             $inc: {
+    //                 'likesInfo.likesCount': -1,
+    //                 'likesInfo.dislikesCount': +1,
+    //             },
+    //         },
+    //     );
+    // }
 }

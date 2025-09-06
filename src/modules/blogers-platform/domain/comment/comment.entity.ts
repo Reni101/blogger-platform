@@ -4,6 +4,7 @@ import { Commentator, CommentatorSchema } from './commentator.schema';
 import { LikesInfo, LikesInfoSchema } from './likes-Info.schema';
 import { CreateCommentDomainDto } from '../dto/create-comment.domain.dto';
 import { CreateCommentDto } from '../../dto/comments/create-comment.dto';
+import { LikeStatusEnum } from '../const/LikeStatusEnum';
 
 export const contentConstraints = {
     minLength: 20,
@@ -59,6 +60,21 @@ export class Comment {
     }
     updateComment(dto: CreateCommentDto) {
         this.content = dto.content;
+    }
+    incrementLikeCount(status: LikeStatusEnum, value: number) {
+        if (status == LikeStatusEnum.Like) {
+            this.likesInfo.likesCount = this.likesInfo.likesCount + value;
+        } else
+            this.likesInfo.dislikesCount = this.likesInfo.dislikesCount + value;
+    }
+    toggleCount(status: LikeStatusEnum) {
+        if (status == LikeStatusEnum.Like) {
+            this.likesInfo.likesCount++;
+            this.likesInfo.dislikesCount--;
+        } else {
+            this.likesInfo.likesCount--;
+            this.likesInfo.dislikesCount++;
+        }
     }
 }
 
