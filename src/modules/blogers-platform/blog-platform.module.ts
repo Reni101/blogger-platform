@@ -25,9 +25,21 @@ import {
 import { LikesCommentRepository } from './infastructure/likes-comment.repository';
 import { GetCommentQueryHandler } from './application/queries/get-comment.query';
 import { GetCommentsByPostIdQueryHandler } from './application/queries/get-comments-by-postId.query';
+import { LikeStatusPostUseCase } from './application/use-cases/posts/like-status-post.use-case';
+import { LikePost, LikePostSchema } from './domain/post/likes-post.entity';
+import { LikesPostRepository } from './infastructure/likes-post.repository';
+import { GetPostQueryHandler } from './application/queries/get-post.query';
 
-const useCases = [CreateCommentUseCase, LikeStatusCommentUseCase];
-const queries = [GetCommentQueryHandler, GetCommentsByPostIdQueryHandler];
+const useCases = [
+    CreateCommentUseCase,
+    LikeStatusCommentUseCase,
+    LikeStatusPostUseCase,
+];
+const queries = [
+    GetCommentQueryHandler,
+    GetCommentsByPostIdQueryHandler,
+    GetPostQueryHandler,
+];
 
 @Module({
     imports: [
@@ -36,6 +48,7 @@ const queries = [GetCommentQueryHandler, GetCommentsByPostIdQueryHandler];
             { name: Post.name, schema: PostSchema },
             { name: Comment.name, schema: CommentSchema },
             { name: LikeComment.name, schema: LikeCommentSchema },
+            { name: LikePost.name, schema: LikePostSchema },
         ]),
         UserAccountsModule,
     ],
@@ -48,11 +61,13 @@ const queries = [GetCommentQueryHandler, GetCommentsByPostIdQueryHandler];
         PostsService,
         PostsRepository,
         PostsQueryRepository,
+        LikesPostRepository,
 
         CommentService,
         CommentsRepository,
         CommentsQueryRepository,
         LikesCommentRepository,
+
         ...useCases,
         ...queries,
     ],

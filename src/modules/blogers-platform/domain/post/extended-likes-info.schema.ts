@@ -11,5 +11,5 @@ export class ExtendedLikesInfo {
     dislikesCount: number;
 }
 
-export const ExtendLikesSchema =
+export const ExtendedLikesInfoSchema =
     SchemaFactory.createForClass(ExtendedLikesInfo);

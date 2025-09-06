@@ -64,8 +64,9 @@ export class Comment {
     incrementLikeCount(status: LikeStatusEnum, value: number) {
         if (status == LikeStatusEnum.Like) {
             this.likesInfo.likesCount = this.likesInfo.likesCount + value;
-        } else
+        } else {
             this.likesInfo.dislikesCount = this.likesInfo.dislikesCount + value;
+        }
     }
     toggleCount(status: LikeStatusEnum) {
         if (status == LikeStatusEnum.Like) {

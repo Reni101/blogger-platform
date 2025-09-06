@@ -24,6 +24,6 @@ export class AuthService {
             return null;
         }
 
-        return { id: user.id.toString() };
+        return { id: user.id.toString(), login: user.login };
     }
 }

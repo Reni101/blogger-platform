@@ -1,8 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { ExtendedLikesInfo, ExtendLikesSchema } from './extend-likes.schema';
+import {
+    ExtendedLikesInfo,
+    ExtendedLikesInfoSchema,
+} from './extended-likes-info.schema';
 import { CreatePostDomainDto } from '../dto/create-post.domain.dto';
 import { UpdatePostDto } from '../../dto/posts/update-post.dto';
+import { LikeStatusEnum } from '../const/LikeStatusEnum';
 
 export const titleConstraints = {
     minLength: 1,
@@ -50,7 +54,7 @@ export class Post {
     @Prop({ type: String, required: true })
     blogName: string;
 
-    @Prop({ type: ExtendLikesSchema, required: true })
+    @Prop({ type: ExtendedLikesInfoSchema, required: true })
     extendedLikesInfo: ExtendedLikesInfo;
 
     createdAt: Date;
@@ -85,6 +89,25 @@ export class Post {
         this.content = dto.content;
         this.blogName = dto.blogName;
         this.blogId = dto.blogId;
+    }
+
+    incrementLikeCount(status: LikeStatusEnum, value: number) {
+        if (status == LikeStatusEnum.Like) {
+            this.extendedLikesInfo.likesCount =
+                this.extendedLikesInfo.likesCount + value;
+        } else {
+            this.extendedLikesInfo.dislikesCount =
+                this.extendedLikesInfo.dislikesCount + value;
+        }
+    }
+    toggleCount(status: LikeStatusEnum) {
+        if (status == LikeStatusEnum.Like) {
+            this.extendedLikesInfo.likesCount++;
+            this.extendedLikesInfo.dislikesCount--;
+        } else {
+            this.extendedLikesInfo.likesCount--;
+            this.extendedLikesInfo.dislikesCount++;
+        }
     }
 }
 export const PostSchema = SchemaFactory.createForClass(Post);

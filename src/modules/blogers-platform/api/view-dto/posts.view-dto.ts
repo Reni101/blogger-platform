@@ -1,5 +1,22 @@
 import { PostDocument } from '../../domain/post/post.enity';
 import { LikeStatusEnum } from '../../domain/const/LikeStatusEnum';
+import { LikePostDocument } from '../../domain/post/likes-post.entity';
+
+export class NewestLikesViewDto {
+    addedAt: Date;
+    userId: string;
+    login: string;
+
+    static mapToView(like: LikePostDocument): NewestLikesViewDto {
+        const dto = new NewestLikesViewDto();
+
+        dto.userId = like.userId.toString();
+        dto.login = like.login;
+        dto.addedAt = like.createdAt;
+
+        return dto;
+    }
+}
 
 export class PostViewDto {
     id: string;

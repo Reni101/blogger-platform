@@ -1,11 +1,12 @@
 import { CreatePostDto } from '../../dto/posts/create-post.dto';
-import { IsString, Length } from 'class-validator';
+import { IsEnum, IsString, Length } from 'class-validator';
 import { Trim } from '../../../../core/decorators/transform/trim';
 import {
     contentDescriptionConstraints,
     shortDescriptionConstraints,
     titleConstraints,
 } from '../../domain/post/post.enity';
+import { LikeStatusEnum } from '../../domain/const/LikeStatusEnum';
 
 export class CreatePostInputDto implements CreatePostDto {
     @Trim()
@@ -59,4 +60,9 @@ export class UpdatePostInputDto {
     @Trim()
     @IsString()
     blogId: string;
+}
+
+export class likeStatusPostInputDto {
+    @IsEnum(LikeStatusEnum)
+    likeStatus: LikeStatusEnum;
 }

@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import {
     CreatePostInputDto,
+    likeStatusPostInputDto,
     UpdatePostInputDto,
 } from './input-dto/posts.input-dto';
 import { PostsService } from '../application/posts.service';
@@ -39,12 +40,17 @@ import { CommentViewDto } from './view-dto/comments.view-dto';
 import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-if-exists-from-request.decorator';
 import { GetCommentsByPostIdQuery } from '../application/queries/get-comments-by-postId.query';
 import { BasicAuthGuard } from '../../user-accounts/guards/basic/bacis-auth.guard';
+import { LikeStatusPostCommand } from '../application/use-cases/posts/like-status-post.use-case';
+import { Types } from 'mongoose';
+import { UsersExternalRepository } from '../../user-accounts/infastructure/external/users.external-repository';
+import { GetPostQuery } from '../application/queries/get-post.query';
 
 @Controller('posts')
 export class PostsController {
     constructor(
         private postsQueryRepository: PostsQueryRepository,
         private commentsQueryRepository: CommentsQueryRepository,
+        private usersExternalRepository: UsersExternalRepository,
         private postsService: PostsService,
         private commandBus: CommandBus,
         private queryBus: QueryBus,
@@ -58,10 +64,17 @@ export class PostsController {
         return this.postsQueryRepository.getByIdOrNotFoundFail(postId);
     }
 
+    @ApiOperation({ summary: 'if there is a token it will return the status' })
     @ApiParam({ name: 'id' })
+    @UseGuards(JwtOptionalAuthGuard)
     @Get(':id')
-    async getById(@Param('id') id: string): Promise<PostViewDto> {
-        return this.postsQueryRepository.getByIdOrNotFoundFail(id);
+    async getById(
+        @Param('id') id: string,
+        @ExtractUserIfExistsFromRequest() user: UserContextDto | null,
+    ): Promise<PostViewDto> {
+        return this.queryBus.execute<GetPostQuery, PostViewDto>(
+            new GetPostQuery({ postId: id, userId: user?.id }),
+        );
     }
 
     @UseGuards(BasicAuthGuard)
@@ -137,5 +150,24 @@ export class PostsController {
             GetCommentsByPostIdQuery,
             PaginatedViewDto<CommentViewDto[]>
         >(new GetCommentsByPostIdQuery({ postId, userId: user?.id, query }));
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @Put(':postId/like-status')
+    async likeStatus(
+        @Param('postId') postId: string,
+        @Body() body: likeStatusPostInputDto,
+        @ExtractUserFromRequest() user: UserContextDto,
+    ) {
+        return this.commandBus.execute<LikeStatusPostCommand, void>(
+            new LikeStatusPostCommand({
+                login: user.login,
+                status: body.likeStatus,
+                postId: new Types.ObjectId(postId),
+                userId: new Types.ObjectId(user.id),
+            }),
+        );
     }
 }

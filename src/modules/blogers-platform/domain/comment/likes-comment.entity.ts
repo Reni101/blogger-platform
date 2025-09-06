@@ -12,6 +12,9 @@ export class LikeComment {
     @Prop({ type: Types.ObjectId, required: true })
     commentId: Types.ObjectId;
 
+    createdAt: Date;
+    updatedAt: Date;
+
     static createInstance(
         dto: CreateLikeCommentDomainDto,
     ): LikeCommentDocument {

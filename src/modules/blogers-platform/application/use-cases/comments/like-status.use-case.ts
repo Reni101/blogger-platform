@@ -29,7 +29,7 @@ export class LikeStatusCommentUseCase
             await this.commentsRepository.findOrNotFoundFail(commentId);
 
         const like = await this.likesCommentRepository.findByCommentIdAndUserId(
-            { userId: userId, commentId },
+            { userId, commentId },
         );
         if (!like) {
             const like = this.likeCommentModelType.createInstance(dto);
@@ -43,6 +43,7 @@ export class LikeStatusCommentUseCase
             comment.incrementLikeCount(like.status, -1);
             await this.commentsRepository.save(comment);
             await like.deleteOne();
+            return;
         }
         if (like.status !== dto.status) {
             like.updateLike(status);
