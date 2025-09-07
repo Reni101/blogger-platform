@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Model } from 'mongoose';
+import { HydratedDocument, Model, Types } from 'mongoose';
 import {
     ExtendedLikesInfo,
     ExtendedLikesInfoSchema,
@@ -48,8 +48,8 @@ export class Post {
     })
     content: string;
 
-    @Prop({ type: String, required: true })
-    blogId: string;
+    @Prop({ type: Types.ObjectId, required: true })
+    blogId: Types.ObjectId;
 
     @Prop({ type: String, required: true })
     blogName: string;
@@ -68,7 +68,7 @@ export class Post {
         post.title = dto.title;
         post.content = dto.content;
         post.shortDescription = dto.shortDescription;
-        post.blogId = dto.blogId;
+        post.blogId = new Types.ObjectId(dto.blogId);
         post.blogName = dto.blogName;
         post.extendedLikesInfo = {
             dislikesCount: 0,
@@ -88,7 +88,7 @@ export class Post {
         this.shortDescription = dto.shortDescription;
         this.content = dto.content;
         this.blogName = dto.blogName;
-        this.blogId = dto.blogId;
+        this.blogId = new Types.ObjectId(dto.blogId);
     }
 
     incrementLikeCount(status: LikeStatusEnum, value: number) {

@@ -11,7 +11,7 @@ import {
     Query,
     UseGuards,
 } from '@nestjs/common';
-import { ApiBasicAuth, ApiParam } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { BlogViewDto } from './view-dto/blogs.view-dto';
 import { BlogsQueryRepository } from '../infastructure/query/blogs.query-repository';
 import {
@@ -26,6 +26,12 @@ import { PostsQueryRepository } from '../infastructure/query/posts.query-reposit
 import { PostsService } from '../application/posts.service';
 import { GetPostsQueryParams } from './input-dto/get-posts-query-params.input-dto';
 import { BasicAuthGuard } from '../../user-accounts/guards/basic/bacis-auth.guard';
+import { QueryBus } from '@nestjs/cqrs';
+import { GetPostsQuery } from '../application/queries/get-posts.query';
+import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-if-exists-from-request.decorator';
+import { UserContextDto } from '../../user-accounts/guards/dto/user-context.dto';
+import { JwtOptionalAuthGuard } from '../../user-accounts/guards/bearer/jwt-optional-auth.guard';
+import { PostViewDto } from './view-dto/posts.view-dto';
 
 @Controller('blogs')
 export class BlogsControllers {
@@ -34,6 +40,7 @@ export class BlogsControllers {
         private blogsService: BlogsService,
         private postsQueryRepository: PostsQueryRepository,
         private postsService: PostsService,
+        private queryBus: QueryBus,
     ) {}
 
     @ApiParam({ name: 'id' })
@@ -89,15 +96,18 @@ export class BlogsControllers {
         return this.postsQueryRepository.getByIdOrNotFoundFail(postId);
     }
 
-    @UseGuards(BasicAuthGuard)
-    @ApiBasicAuth()
     @ApiParam({ name: 'blogId' })
+    @ApiOperation({ summary: 'if there is a token it will return the status' })
+    @UseGuards(JwtOptionalAuthGuard)
     @Get(':blogId/posts')
     async getPostsByBlogId(
         @Query() query: GetPostsQueryParams,
         @Param('blogId') blogId: string,
+        @ExtractUserIfExistsFromRequest() user: UserContextDto | null,
     ) {
-        await this.blogsQueryRepository.getByIdOrNotFoundFail(blogId);
-        return await this.postsQueryRepository.getPostsByBlogId(query, blogId);
+        return this.queryBus.execute<
+            GetPostsQuery,
+            PaginatedViewDto<PostViewDto[]>
+        >(new GetPostsQuery({ query, blogId, userId: user?.id }));
     }
 }

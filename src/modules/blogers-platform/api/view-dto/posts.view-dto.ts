@@ -44,7 +44,7 @@ export class PostViewDto {
         dto.shortDescription = post.shortDescription;
         dto.content = post.content;
         dto.createdAt = post.createdAt;
-        dto.blogId = post.blogId;
+        dto.blogId = post.blogId.toString();
         dto.blogName = post.blogName;
         dto.extendedLikesInfo = {
             likesCount: post.extendedLikesInfo.likesCount,

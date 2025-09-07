@@ -42,15 +42,14 @@ import { GetCommentsByPostIdQuery } from '../application/queries/get-comments-by
 import { BasicAuthGuard } from '../../user-accounts/guards/basic/bacis-auth.guard';
 import { LikeStatusPostCommand } from '../application/use-cases/posts/like-status-post.use-case';
 import { Types } from 'mongoose';
-import { UsersExternalRepository } from '../../user-accounts/infastructure/external/users.external-repository';
 import { GetPostQuery } from '../application/queries/get-post.query';
+import { GetPostsQuery } from '../application/queries/get-posts.query';
 
 @Controller('posts')
 export class PostsController {
     constructor(
         private postsQueryRepository: PostsQueryRepository,
         private commentsQueryRepository: CommentsQueryRepository,
-        private usersExternalRepository: UsersExternalRepository,
         private postsService: PostsService,
         private commandBus: CommandBus,
         private queryBus: QueryBus,
@@ -97,23 +96,20 @@ export class PostsController {
         return this.postsService.updatePost({ ...body, id: id });
     }
     @Get()
+    @UseGuards(JwtOptionalAuthGuard)
+    @ApiOperation({ summary: 'if there is a token it will return the status' })
     async getAll(
         @Query() query: GetPostsQueryParams,
+        @ExtractUserIfExistsFromRequest() user: UserContextDto | null,
     ): Promise<PaginatedViewDto<PostViewDto[]>> {
-        return this.postsQueryRepository.getAll(query);
+        return this.queryBus.execute<
+            GetPostsQuery,
+            PaginatedViewDto<PostViewDto[]>
+        >(new GetPostsQuery({ query, userId: user?.id }));
     }
 
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
-    @ApiParam({
-        name: 'postId',
-        content: {
-            postId: {
-                example: '68b930c0b1eea6deab39cb09',
-                schema: { type: 'string' },
-            },
-        },
-    })
     @Post(':postId/comments')
     async createComment(
         @Param('postId') postId: string,

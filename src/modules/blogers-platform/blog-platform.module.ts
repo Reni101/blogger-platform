@@ -29,6 +29,7 @@ import { LikeStatusPostUseCase } from './application/use-cases/posts/like-status
 import { LikePost, LikePostSchema } from './domain/post/likes-post.entity';
 import { LikesPostRepository } from './infastructure/likes-post.repository';
 import { GetPostQueryHandler } from './application/queries/get-post.query';
+import { GetPostsQueryHandler } from './application/queries/get-posts.query';
 
 const useCases = [
     CreateCommentUseCase,
@@ -39,6 +40,7 @@ const queries = [
     GetCommentQueryHandler,
     GetCommentsByPostIdQueryHandler,
     GetPostQueryHandler,
+    GetPostsQueryHandler,
 ];
 
 @Module({

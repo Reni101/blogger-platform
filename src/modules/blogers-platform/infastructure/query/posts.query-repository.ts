@@ -4,7 +4,7 @@ import { Post, PostModelType } from '../../domain/post/post.enity';
 import { PostViewDto } from '../../api/view-dto/posts.view-dto';
 import { GetPostsQueryParams } from '../../api/input-dto/get-posts-query-params.input-dto';
 import { PaginatedViewDto } from '../../../../core/dto/base.paginated.view-dto';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 import { DomainException } from '../../../../core/exceptions/domain-exceptions';
 import { DomainExceptionCode } from '../../../../core/exceptions/domain-exception-codes';
 
@@ -14,10 +14,14 @@ export class PostsQueryRepository {
 
     async getAll(
         query: GetPostsQueryParams,
+        blogId?: string,
     ): Promise<PaginatedViewDto<PostViewDto[]>> {
         const filter: FilterQuery<Post> = {
             deletedAt: null,
         };
+        if (blogId) {
+            filter.blogId = new Types.ObjectId(blogId);
+        }
 
         const users = await this.PostModel.find(filter)
             .sort({ [query.sortBy]: query.sortDirection })
@@ -53,30 +57,30 @@ export class PostsQueryRepository {
         return PostViewDto.mapToView(post);
     }
 
-    async getPostsByBlogId(
-        query: GetPostsQueryParams,
-        blogId: string,
-    ): Promise<PaginatedViewDto<PostViewDto[]>> {
-        const filter: FilterQuery<Post> = {
-            deletedAt: null,
-            blogId: blogId,
-        };
-
-        const users = await this.PostModel.find(filter)
-            .sort({ [query.sortBy]: query.sortDirection })
-            .skip(query.calculateSkip())
-            .limit(query.pageSize)
-            .lean();
-
-        const totalCount = await this.PostModel.countDocuments(filter);
-
-        const items = users.map(PostViewDto.mapToView);
-
-        return PaginatedViewDto.mapToView({
-            items,
-            totalCount,
-            page: query.pageNumber,
-            size: query.pageSize,
-        });
-    }
+    // async getPostsByBlogId(
+    //     query: GetPostsQueryParams,
+    //     blogId: string,
+    // ): Promise<PaginatedViewDto<PostViewDto[]>> {
+    //     const filter: FilterQuery<Post> = {
+    //         deletedAt: null,
+    //         blogId: blogId,
+    //     };
+    //
+    //     const users = await this.PostModel.find(filter)
+    //         .sort({ [query.sortBy]: query.sortDirection })
+    //         .skip(query.calculateSkip())
+    //         .limit(query.pageSize)
+    //         .lean();
+    //
+    //     const totalCount = await this.PostModel.countDocuments(filter);
+    //
+    //     const items = users.map(PostViewDto.mapToView);
+    //
+    //     return PaginatedViewDto.mapToView({
+    //         items,
+    //         totalCount,
+    //         page: query.pageNumber,
+    //         size: query.pageSize,
+    //     });
+    // }
 }
