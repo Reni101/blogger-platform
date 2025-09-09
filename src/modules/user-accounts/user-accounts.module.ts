@@ -28,11 +28,14 @@ import { Session, SessionSchema } from './domain/session.entity';
 import { SessionsRepository } from './infastructure/sessions.repository';
 import { SessionsService } from './application/sessions.service';
 import { LogoutUseCase } from './application/use-cases/auth/logout.use-case';
+import { GetDevicesQueryHandler } from './application/queries/get-devices.query';
+import { SessionsQueryRepository } from './infastructure/query/sessions.query-repository';
 
 const usersUseCases = [
     CreateUserUseCase,
     RegisterUserUseCase,
     DeleteUserUseCase,
+    GetDevicesQueryHandler,
 ];
 
 const authUseCases = [
@@ -72,6 +75,7 @@ const authUseCases = [
 
         SessionsService,
         SessionsRepository,
+        SessionsQueryRepository,
     ],
     exports: [JwtStrategy, UsersExternalRepository],
 })
