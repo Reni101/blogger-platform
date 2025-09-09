@@ -27,6 +27,7 @@ import { RefreshTokenUseCase } from './application/use-cases/auth/refresh-token.
 import { Session, SessionSchema } from './domain/session.entity';
 import { SessionsRepository } from './infastructure/sessions.repository';
 import { SessionsService } from './application/sessions.service';
+import { LogoutUseCase } from './application/use-cases/auth/logout.use-case';
 
 const usersUseCases = [
     CreateUserUseCase,
@@ -41,6 +42,7 @@ const authUseCases = [
     RegistrationEmailResendingUseCase,
     PasswordRecoveryUseCase,
     NewPasswordUseCase,
+    LogoutUseCase,
 ];
 
 @Module({

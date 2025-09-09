@@ -11,7 +11,12 @@ import {
 import { LocalAuthGuard } from '../guards/local/local-auth.guard';
 import { UserContextDto } from '../guards/dto/user-context.dto';
 import { ExtractUserFromRequest } from '../guards/decorators/extract-user-from-request.decorator';
-import { ApiBearerAuth, ApiBody, ApiResponse } from '@nestjs/swagger';
+import {
+    ApiBearerAuth,
+    ApiBody,
+    ApiCookieAuth,
+    ApiResponse,
+} from '@nestjs/swagger';
 import { CreateUserInputDto } from './input-dto/users.input-dto';
 import { Response } from 'express';
 import {
@@ -33,6 +38,7 @@ import { RefreshTokenCommand } from '../application/use-cases/auth/refresh-token
 import { ExtractClientDataFromRequest } from '../guards/decorators/extract-client-data-from-request';
 import { ClientContextDto } from '../guards/dto/client-context.dto';
 import { ExtractRefreshTokenFromRequest } from '../guards/decorators/extract-refresh-token-from-request';
+import { LogoutCommand } from '../application/use-cases/auth/logout.use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -89,6 +95,7 @@ export class AuthController {
             properties: { accessToken: { type: 'string' } },
         },
     })
+    @ApiCookieAuth()
     @Post('refresh-token')
     async refreshToken(
         @ExtractRefreshTokenFromRequest() refreshToken: string | undefined,
@@ -105,6 +112,20 @@ export class AuthController {
             secure: true,
         });
         return { accessToken: newAccessToken };
+    }
+
+    @ApiCookieAuth()
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @Post('logout')
+    async logout(
+        @Res({ passthrough: true }) res: Response,
+        @ExtractRefreshTokenFromRequest() refreshToken: string | undefined,
+    ) {
+        await this.commandBus.execute<LogoutCommand, void>(
+            new LogoutCommand(refreshToken),
+        );
+        res.clearCookie('refreshToken', { path: '/' });
+        return;
     }
 
     @Post('registration')
