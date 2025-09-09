@@ -32,8 +32,8 @@ export class RegistrationEmailResendingUseCase
         const code = uuid();
         user.resendingEmail(code);
         await this.usersRepository.save(user);
-        this.emailService
-            .resendEmail(user.email, user.emailConfirmation.confirmationCode)
-            .catch(console.error);
+        // this.emailService
+        //     .resendEmail(user.email, user.emailConfirmation.confirmationCode)
+        //     .catch(console.error);
     }
 }
