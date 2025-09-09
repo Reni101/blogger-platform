@@ -99,6 +99,7 @@ export class AuthController {
     })
     @ApiCookieAuth()
     @UseGuards(ThrottlerGuard)
+    @HttpCode(HttpStatus.OK)
     @Post('refresh-token')
     async refreshToken(
         @ExtractRefreshTokenFromRequest() refreshToken: string | undefined,
