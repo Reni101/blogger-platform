@@ -7,6 +7,7 @@ import {
 } from '../domain/session.entity';
 import { DomainException } from '../../../core/exceptions/domain-exceptions';
 import { DomainExceptionCode } from '../../../core/exceptions/domain-exception-codes';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class SessionsRepository {
@@ -33,5 +34,21 @@ export class SessionsRepository {
         }
 
         return session;
+    }
+    async findByDeviceIdOrFail(deviceId: string) {
+        const session = await this.sessionModel.findOne({ deviceId });
+        if (!session) {
+            throw new DomainException({
+                code: DomainExceptionCode.NotFound,
+                message: 'session not found',
+            });
+        }
+        return session;
+    }
+    async getSessionsByUserId(userId: Types.ObjectId) {
+        return this.sessionModel.find({ userId }).lean();
+    }
+    async deleteOtherSession(ids: Types.ObjectId[]) {
+        return this.sessionModel.deleteMany({ _id: { $in: ids } });
     }
 }

@@ -30,12 +30,16 @@ import { SessionsService } from './application/sessions.service';
 import { LogoutUseCase } from './application/use-cases/auth/logout.use-case';
 import { GetDevicesQueryHandler } from './application/queries/get-devices.query';
 import { SessionsQueryRepository } from './infastructure/query/sessions.query-repository';
+import { TerminateOtherDevicesUseCase } from './application/use-cases/security/terminate-other-devices.use-case';
+import { TerminateDeviceUseCase } from './application/use-cases/security/terminate-device.use-case';
 
 const usersUseCases = [
     CreateUserUseCase,
     RegisterUserUseCase,
     DeleteUserUseCase,
     GetDevicesQueryHandler,
+    TerminateOtherDevicesUseCase,
+    TerminateDeviceUseCase,
 ];
 
 const authUseCases = [

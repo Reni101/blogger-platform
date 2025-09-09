@@ -14,7 +14,7 @@ export class SessionsQueryRepository {
             userId,
         };
 
-        const devices = await this.sessionModel.find(filter).exec();
+        const devices = await this.sessionModel.find(filter);
         return devices.map(DeviceViewDto.mapToView);
     }
 }
