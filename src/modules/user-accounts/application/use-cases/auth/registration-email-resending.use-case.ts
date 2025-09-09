@@ -33,7 +33,7 @@ export class RegistrationEmailResendingUseCase
         user.resendingEmail(code);
         await this.usersRepository.save(user);
         // this.emailService
-        //     .resendEmail(user.email, user.emailConfirmation.confirmationCode)
+        //     .resendEmail(user.email, code)
         //     .catch(console.error);
     }
 }

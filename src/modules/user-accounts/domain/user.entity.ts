@@ -85,7 +85,8 @@ export class User {
 
     confirmEmail() {
         this.emailConfirmation = {
-            ...this.emailConfirmation,
+            confirmationCode: this.emailConfirmation.confirmationCode,
+            expirationDate: this.emailConfirmation.expirationDate,
             isConfirmed: true,
         };
     }
