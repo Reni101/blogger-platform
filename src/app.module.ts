@@ -12,9 +12,13 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CqrsModule } from '@nestjs/cqrs';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
     imports: [
+        ThrottlerModule.forRoot({
+            throttlers: [{ limit: 5, ttl: 10000 }],
+        }),
         CqrsModule.forRoot(),
         ConfigModule.forRoot({ isGlobal: true }),
         MongooseModule.forRoot(process.env.MONGO_URL ?? ''),
@@ -23,6 +27,7 @@ import { CqrsModule } from '@nestjs/cqrs';
             serveRoot:
                 process.env.NODE_ENV === 'development' ? '/' : `/swagger`,
         }),
+
         UserAccountsModule,
         BlogPlatformModule,
         TestingModule,

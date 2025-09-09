@@ -20,7 +20,6 @@ export class DomainHttpExceptionsFilter implements ExceptionFilter {
 
         const status = this.mapToHttpStatus(exception.code);
         const responseBody = this.buildResponseBody(exception, request.url);
-
         response.status(status).json(responseBody);
     }
 
@@ -50,10 +49,10 @@ export class DomainHttpExceptionsFilter implements ExceptionFilter {
         requestUrl: string,
     ): ErrorResponseBody {
         return {
-            timestamp: new Date().toISOString(),
-            path: requestUrl,
-            message: exception.message,
-            code: exception.code,
+            // timestamp: new Date().toISOString(),
+            // path: requestUrl,
+            // message: exception.message,
+            // code: exception.code,
             errorsMessages: exception.extensions,
         };
     }

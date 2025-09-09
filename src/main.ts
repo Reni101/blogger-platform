@@ -3,13 +3,15 @@ import { AppModule } from './app.module';
 import { appSetup } from './setup/app.setup';
 import cookieParser from 'cookie-parser';
 import { Logger } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 // const serverUrl = 'http://localhost:3000';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
     appSetup(app); //глобальные настройки приложения
     app.enableCors();
+    app.set('trust proxy', 'loopback');
     app.use(cookieParser());
     const port = process.env.PORT ?? 3000;
 

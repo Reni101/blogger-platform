@@ -5,7 +5,7 @@ import { DomainException } from '../../../../../core/exceptions/domain-exception
 import { DomainExceptionCode } from '../../../../../core/exceptions/domain-exception-codes';
 
 export class TerminateDeviceCommand {
-    constructor(public dto: { refreshToken?: string; deviceId }) {}
+    constructor(public dto: { refreshToken?: string; deviceId: string }) {}
 }
 @CommandHandler(TerminateDeviceCommand)
 export class TerminateDeviceUseCase
@@ -24,7 +24,7 @@ export class TerminateDeviceUseCase
 
         if (sessionForDelete.userId.toString() !== session.userId.toString()) {
             throw new DomainException({
-                message: 'delete the deviceId of other user',
+                message: 'forbiden delete the session',
                 code: DomainExceptionCode.Forbidden,
             });
         }
