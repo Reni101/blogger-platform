@@ -22,6 +22,11 @@ import { NewPasswordUseCase } from './application/use-cases/auth/new-password.us
 import { PasswordRecoveryUseCase } from './application/use-cases/auth/password-recovery.use-case';
 import { JwtStrategy } from './guards/bearer/jwt.strategy';
 import { UsersExternalRepository } from './infastructure/external/users.external-repository';
+import { SecurityDevicesController } from './api/security-devices.controller';
+import { RefreshTokenUseCase } from './application/use-cases/auth/refresh-token.use-case';
+import { Session, SessionSchema } from './domain/session.entity';
+import { SessionsRepository } from './infastructure/sessions.repository';
+import { SessionsService } from './application/sessions.service';
 
 const usersUseCases = [
     CreateUserUseCase,
@@ -31,6 +36,7 @@ const usersUseCases = [
 
 const authUseCases = [
     LoginUserUseCase,
+    RefreshTokenUseCase,
     RegistrationConfirmationUseCase,
     RegistrationEmailResendingUseCase,
     PasswordRecoveryUseCase,
@@ -39,14 +45,17 @@ const authUseCases = [
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+        MongooseModule.forFeature([
+            { name: User.name, schema: UserSchema },
+            { name: Session.name, schema: SessionSchema },
+        ]),
         JwtModule.register({
             secret: process.env.SECRET_KEY,
-            signOptions: { expiresIn: '5m' }, // Время жизни токена
+            signOptions: { expiresIn: process.env.ACCESS_TOKEN_EXPIRE_IN },
         }),
         NotificationsModule,
     ],
-    controllers: [UsersController, AuthController],
+    controllers: [UsersController, AuthController, SecurityDevicesController],
     providers: [
         UsersService,
         UsersQueryRepository,
@@ -58,6 +67,9 @@ const authUseCases = [
         ...authUseCases,
         JwtStrategy,
         UsersExternalRepository,
+
+        SessionsService,
+        SessionsRepository,
     ],
     exports: [JwtStrategy, UsersExternalRepository],
 })

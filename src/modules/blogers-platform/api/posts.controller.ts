@@ -29,7 +29,7 @@ import { PaginatedViewDto } from '../../../core/dto/base.paginated.view-dto';
 import { GetPostsQueryParams } from './input-dto/get-posts-query-params.input-dto';
 import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
 import { CreateCommentInputDto } from './input-dto/comments.input-dto';
-import { ExtractUserFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-from-request.decorator';
+import { ExtractUserFromRequest } from '../../user-accounts/guards/decorators/extract-user-from-request.decorator';
 import { UserContextDto } from '../../user-accounts/guards/dto/user-context.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../application/use-cases/comments/create-comment.use-case';
@@ -37,7 +37,7 @@ import { CommentsQueryRepository } from '../infastructure/query/comments.query-r
 import { JwtOptionalAuthGuard } from '../../user-accounts/guards/bearer/jwt-optional-auth.guard';
 import { GetCommentsQueryParams } from './input-dto/get-comments-query-params.input-dto';
 import { CommentViewDto } from './view-dto/comments.view-dto';
-import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-if-exists-from-request.decorator';
+import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/extract-user-if-exists-from-request.decorator';
 import { GetCommentsByPostIdQuery } from '../application/queries/get-comments-by-postId.query';
 import { BasicAuthGuard } from '../../user-accounts/guards/basic/bacis-auth.guard';
 import { LikeStatusPostCommand } from '../application/use-cases/posts/like-status-post.use-case';
@@ -159,7 +159,6 @@ export class PostsController {
     ) {
         return this.commandBus.execute<LikeStatusPostCommand, void>(
             new LikeStatusPostCommand({
-                login: user.login,
                 status: body.likeStatus,
                 postId: new Types.ObjectId(postId),
                 userId: new Types.ObjectId(user.id),

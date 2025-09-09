@@ -6,6 +6,7 @@ export function swaggerSetup(app: INestApplication) {
         .setTitle('BLOGGER API')
         .addBearerAuth()
         .addBasicAuth()
+        .addCookieAuth('refreshToken')
         .setVersion('1.0')
         .build();
 

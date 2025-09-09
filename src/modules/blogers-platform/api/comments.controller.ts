@@ -12,7 +12,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { CommentService } from '../application/comment.service';
 import { JwtAuthGuard } from '../../user-accounts/guards/bearer/jwt-auth.guard';
-import { ExtractUserFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-from-request.decorator';
+import { ExtractUserFromRequest } from '../../user-accounts/guards/decorators/extract-user-from-request.decorator';
 import { UserContextDto } from '../../user-accounts/guards/dto/user-context.dto';
 import {
     likeStatusCommentInputDto,
@@ -21,7 +21,7 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { LikeStatusCommentCommand } from '../application/use-cases/comments/like-status.use-case';
 import { JwtOptionalAuthGuard } from '../../user-accounts/guards/bearer/jwt-optional-auth.guard';
-import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-if-exists-from-request.decorator';
+import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/extract-user-if-exists-from-request.decorator';
 import { Types } from 'mongoose';
 import { GetCommentQuery } from '../application/queries/get-comment.query';
 import { CommentViewDto } from './view-dto/comments.view-dto';

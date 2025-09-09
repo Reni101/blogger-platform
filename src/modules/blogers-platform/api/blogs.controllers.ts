@@ -28,7 +28,7 @@ import { GetPostsQueryParams } from './input-dto/get-posts-query-params.input-dt
 import { BasicAuthGuard } from '../../user-accounts/guards/basic/bacis-auth.guard';
 import { QueryBus } from '@nestjs/cqrs';
 import { GetPostsQuery } from '../application/queries/get-posts.query';
-import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/param/extract-user-if-exists-from-request.decorator';
+import { ExtractUserIfExistsFromRequest } from '../../user-accounts/guards/decorators/extract-user-if-exists-from-request.decorator';
 import { UserContextDto } from '../../user-accounts/guards/dto/user-context.dto';
 import { JwtOptionalAuthGuard } from '../../user-accounts/guards/bearer/jwt-optional-auth.guard';
 import { PostViewDto } from './view-dto/posts.view-dto';
