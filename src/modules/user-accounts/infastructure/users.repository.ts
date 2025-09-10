@@ -39,7 +39,10 @@ export class UsersRepository {
     }
 
     async findUniqueUser(login: string, email: string) {
-        return this.UserModel.findOne({ $or: [{ login }, { email }] });
+        return this.UserModel.findOne({
+            $or: [{ login }, { email }],
+            deletedAt: null,
+        });
     }
 
     async findByCodeOrNotFoundFail(code: string): Promise<UserDocument> {
