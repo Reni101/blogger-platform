@@ -13,6 +13,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
     imports: [
@@ -26,6 +27,16 @@ import { ThrottlerModule } from '@nestjs/throttler';
             rootPath: join(__dirname, '..', 'swagger-static'),
             serveRoot:
                 process.env.NODE_ENV === 'development' ? '/' : `/swagger`,
+        }),
+        TypeOrmModule.forRoot({
+            type: 'postgres',
+            host: 'localhost',
+            port: 5432,
+            username: process.env.PG_USER_NAME,
+            password: process.env.PG_PASSWORD,
+            database: process.env.PG_DB_NAME,
+            autoLoadEntities: true,
+            synchronize: true,
         }),
 
         UserAccountsModule,
