@@ -71,7 +71,7 @@ export class AuthController {
         @ExtractUserFromRequest() user: UserContextDto,
         @ExtractClientDataFromRequest() client: ClientContextDto,
         @Res({ passthrough: true }) res: Response,
-    ): Promise<{ accessToken: string }> {
+    ) {
         const { accessToken, refreshToken } = await this.commandBus.execute<
             LoginCommand,
             { accessToken: string; refreshToken: string }
@@ -185,6 +185,6 @@ export class AuthController {
     @ApiBearerAuth()
     @Get('me')
     async me(@ExtractUserFromRequest() user: UserContextDto) {
-        return this.usersQueryRepository.getUserById(user.id);
+        return this.usersQueryRepository.getByIdOrNotFoundFail(user.id);
     }
 }

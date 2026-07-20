@@ -21,7 +21,6 @@ import { CreateUserCommand } from '../application/use-cases/admins/create-user.u
 import { DeleteUserCommand } from '../application/use-cases/admins/delete-user.use-case';
 import { CommandBus } from '@nestjs/cqrs';
 
-//    @InjectDataSource() protected dataSource: DataSource
 //     const res = await this.dataSource.query('SELECT * FROM "Users"');
 
 @Controller('users')

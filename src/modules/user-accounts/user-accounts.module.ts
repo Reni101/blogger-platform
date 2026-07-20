@@ -32,6 +32,10 @@ import { GetDevicesQueryHandler } from './application/queries/get-devices.query'
 import { SessionsQueryRepository } from './infastructure/query/sessions.query-repository';
 import { TerminateOtherDevicesUseCase } from './application/use-cases/security/terminate-other-devices.use-case';
 import { TerminateDeviceUseCase } from './application/use-cases/security/terminate-device.use-case';
+import { UsersPostgresRepository } from './infastructure/postgres/users.postgres.repository';
+import { SaUsersController } from './api/postgres/sa.users.controller';
+import { CreateUserPostgresUseCase } from './application/use-cases/admins/postgres/create-user-postgres.use-case';
+import { UsersPostgresService } from './application/users-postgres.service';
 
 const usersUseCases = [
     CreateUserUseCase,
@@ -40,6 +44,7 @@ const usersUseCases = [
     GetDevicesQueryHandler,
     TerminateOtherDevicesUseCase,
     TerminateDeviceUseCase,
+    CreateUserPostgresUseCase,
 ];
 
 const authUseCases = [
@@ -64,7 +69,12 @@ const authUseCases = [
         }),
         NotificationsModule,
     ],
-    controllers: [UsersController, AuthController, SecurityDevicesController],
+    controllers: [
+        UsersController,
+        AuthController,
+        SecurityDevicesController,
+        SaUsersController,
+    ],
     providers: [
         UsersService,
         UsersQueryRepository,
@@ -80,6 +90,10 @@ const authUseCases = [
         SessionsService,
         SessionsRepository,
         SessionsQueryRepository,
+
+        // postgres
+        UsersPostgresService,
+        UsersPostgresRepository,
     ],
     exports: [JwtStrategy, UsersExternalRepository],
 })

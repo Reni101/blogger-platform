@@ -4,8 +4,9 @@ import { GetUsersQueryParams } from '../../api/input-dto/get-users-query-params.
 import { PaginatedViewDto } from '../../../../core/dto/base.paginated.view-dto';
 import { UsersViewDto } from '../../api/view-dto/users.view-dto';
 import { FilterQuery } from 'mongoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserViewDto } from '../../api/view-dto/user.view-dto';
+import { Injectable } from '@nestjs/common';
+import { DomainException } from '../../../../core/exceptions/domain-exceptions';
+import { DomainExceptionCode } from '../../../../core/exceptions/domain-exception-codes';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -56,21 +57,12 @@ export class UsersQueryRepository {
         });
 
         if (!user) {
-            throw new NotFoundException('users not found');
+            throw new DomainException({
+                code: DomainExceptionCode.NotFound,
+                message: 'user not found',
+            });
         }
 
         return UsersViewDto.mapToView(user);
-    }
-    async getUserById(id: string): Promise<UserViewDto> {
-        const user = await this.UserModel.findOne({
-            _id: id,
-            deletedAt: null,
-        });
-
-        if (!user) {
-            throw new NotFoundException('users not found');
-        }
-
-        return UserViewDto.mapToView(user);
     }
 }
